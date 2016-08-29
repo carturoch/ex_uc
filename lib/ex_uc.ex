@@ -65,6 +65,6 @@ defmodule ExUc do
     "10m"
   """
   def as_string(val) do
-    "#{}"
+    "#{val}"
   end
 end
