@@ -1,5 +1,5 @@
 defmodule ExUc.Value do
-  defstruct value: 0, unit: :none, magnitude: :any 
+  defstruct value: 0, unit: :none, kind: :any 
 end
 
 defimpl String.Chars, for: ExUc.Value do
