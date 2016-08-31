@@ -33,7 +33,7 @@ defmodule ExUc do
     iex> ExUc.from("5 alien")
     nil
   """
-  def from(str) do
+  def from(_str) do
     
   end
 
@@ -80,6 +80,11 @@ defmodule ExUc do
     "#{val}"
   end
 
+  @doc """
+  Gets a list of all the unit symbols defined in config.
+
+  Returns List
+  """
   def units do
     Application.get_all_env(:ex_uc)
     |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)  
@@ -87,6 +92,20 @@ defmodule ExUc do
     |> Enum.map(fn {unit, name} -> unit end)
   end
 
+  @doc """
+  Gets the kind of unit for the given unit.
+
+  ## Parameters
+
+    - unit: Atom representing the unit to find the kind.
+
+  ## Examples
+
+    iex>ExUc.kind_of_unit(:kg)
+    "mass"
+
+  Returns String
+  """
   def kind_of_unit(unit) do
     kind = Application.get_all_env(:ex_uc)
     |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)  
@@ -96,5 +115,39 @@ defmodule ExUc do
     kind_name 
     |> Atom.to_string 
     |> String.replace_suffix("_units", "")
+  end
+
+  @doc """
+  Gets the conversion factor for the units
+
+  Returns Atom.t, Integer.t, Float.t
+
+  ## Parameters
+
+    - from: Atom representing the unit to convert from
+    - to: Atom representing the unit to convert to
+
+  ## Examples
+
+    iex>ExUc.get_conversion(:g, :mg)
+    1000
+
+  """
+  def get_conversion(from, to) do
+    conversion_key = "#{kind_of_unit(from)}_conversions" |> String.to_atom
+    
+    Application.get_env(:ex_uc, conversion_key)
+    |> Enum.map(&parse_conversion/1)
+    |> Enum.find(fn map -> {map[:from], map[:to]} == {from, to} end)
+    |> Map.get(:by)
+  end
+
+  defp parse_conversion({key, val}) do
+    [from, to] = key 
+    |> Atom.to_string 
+    |> String.split("_to_")
+    |> Enum.map(&String.to_atom/1)
+
+    %{from: from, to: to, by: val}
   end
 end
