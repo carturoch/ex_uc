@@ -27,14 +27,19 @@ defmodule ExUc do
 
   ## Examples
 
-    iex> ExUc.from("5' \"")
-    %ExUc.Value{value: 62, unit: :in, kind: :length}
+    iex>ExUc.from("500 mg")
+    %ExUc.Value{value: 500.0, unit: :mg, kind: :mass}
 
-    iex> ExUc.from("5 alien")
+    iex>ExUc.from("5 alien")
     nil
   """
-  def from(_str) do
-    
+  def from(str) do
+    with {val, unit_str} <- Float.parse(str),
+      unit <- unit_str |> String.trim |> String.to_atom,
+      kind_str <- kind_of_unit(unit),
+      _next when not is_nil(kind_str) <- kind_str,
+      kind <- String.to_atom(kind_str),
+      do: %Value{value: val, unit: unit, kind: kind}
   end
 
   @doc """
@@ -49,19 +54,23 @@ defmodule ExUc do
 
   ## Examples
 
-    iex> ExUc.to(%{value: 62, unit: :in, kind: :length}, :cm)
-    %ExUc.Value{value: 152.0, unit: :cm, kind: :length}
-
-    iex> ExUc.to(%{value: 100, unit: :kg, kind: :mass}, :lbs)
-    %ExUc.Value{value: 220.46, unit: :lbs, kind: :mass}
+    iex> ExUc.to(%{value: 100, unit: :kg, kind: :mass}, :lb)
+    %ExUc.Value{value: 220.46, unit: :lb, kind: :mass}
 
   _Note: Kind is optional. _
   
     iex> ExUc.to(%{value: 100, unit: :m}, :km)
     %ExUc.Value{value: 0.1, unit: :km, kind: :mass}
   """
-  def to(val, unit) do
-    
+  def to(val, unit_to) do
+    unit_from = val.unit
+    original_value = val.value
+    new_value = case get_conversion(unit_from, unit_to) do
+      factor when is_integer(factor) -> original_value * val
+      factor when is_float(factor) -> original_value * val |> Float.round(2)
+      _ -> original_value
+    end
+    %Value{value: new_value, unit: unit_to, kind: val.kind}
   end
 
   @doc """
@@ -89,7 +98,7 @@ defmodule ExUc do
     Application.get_all_env(:ex_uc)
     |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)  
     |> Enum.flat_map(fn {_key, opts} -> opts end)
-    |> Enum.map(fn {unit, name} -> unit end)
+    |> Enum.map(fn {unit, _name} -> unit end)
   end
 
   @doc """
@@ -109,12 +118,15 @@ defmodule ExUc do
   def kind_of_unit(unit) do
     kind = Application.get_all_env(:ex_uc)
     |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)  
-    |> Enum.find(fn {kind, opts} -> opts |> Enum.into(%{}) |> Map.has_key?(unit) end) 
+    |> Enum.find(fn {_kind, opts} -> opts |> Enum.into(%{}) |> Map.has_key?(unit) end) 
     
-    {kind_name, _units} = kind
-    kind_name 
-    |> Atom.to_string 
-    |> String.replace_suffix("_units", "")
+    case kind do
+      {kind_name, _units} -> kind_name 
+        |> Atom.to_string
+        |> String.replace_suffix("_units", "")
+
+      _ -> nil
+    end
   end
 
   @doc """
