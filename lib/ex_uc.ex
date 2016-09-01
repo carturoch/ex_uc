@@ -54,22 +54,15 @@ defmodule ExUc do
 
   ## Examples
 
-    iex> ExUc.to(%{value: 100, unit: :kg, kind: :mass}, :lb)
-    %ExUc.Value{value: 220.46, unit: :lb, kind: :mass}
-
-  _Note: Kind is optional. _
-  
-    iex> ExUc.to(%{value: 100, unit: :m}, :km)
-    %ExUc.Value{value: 0.1, unit: :km, kind: :mass}
+    iex> ExUc.to(%{value: 20, unit: :g, kind: :mass}, :mg)
+    %ExUc.Value{value: 20000, unit: :mg, kind: :mass}
+    
   """
   def to(val, unit_to) do
     unit_from = val.unit
     original_value = val.value
-    new_value = case get_conversion(unit_from, unit_to) do
-      factor when is_integer(factor) -> original_value * val
-      factor when is_float(factor) -> original_value * val |> Float.round(2)
-      _ -> original_value
-    end
+    factor = get_conversion(unit_from, unit_to)
+    new_value = original_value * factor
     %Value{value: new_value, unit: unit_to, kind: val.kind}
   end
 
