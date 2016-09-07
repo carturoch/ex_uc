@@ -6,9 +6,20 @@ defmodule ExUc do
 
   It could be used as:
   ```elixir
-  value = ExUc.from("5' 2\"")
+  value = ExUc.from("5' 2\" ")
     |> ExUc.to(:m)
     |> ExUc.as_string
+  ```
+  Or:
+  ```elixir
+  import ExUc
+
+  from("25C") |> to(:F) |> as_string # "77F"
+  ```
+
+  Or simply:
+  ```elixir
+  "\#{ExUc.to("72F", :K)}" # "295.37K"
   ```
   """
 
@@ -164,6 +175,17 @@ defmodule ExUc do
     %{from: from, to: to, by: val}
   end
 
+  @doc """
+  Apply the conversion rule to the given value.
+
+  Returns Float.t
+
+  ## Parameters
+
+    - val: Value in the original unit.
+    - factor|formule: Numeric paremeters are considered multiplication factors. Else a clousure is expected.
+
+  """
   defp apply_conversion(val, factor) when is_number(factor), do: val * factor
   defp apply_conversion(val, formule) when is_function(formule), do: formule.(val)
 end
