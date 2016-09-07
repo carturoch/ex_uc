@@ -55,14 +55,15 @@ defmodule ExUc do
   ## Examples
 
     iex> ExUc.to(%{value: 20, unit: :g, kind: :mass}, :mg)
-    %ExUc.Value{value: 20000, unit: :mg, kind: :mass}
+    %ExUc.Value{value: 20000.0, unit: :mg, kind: :mass}
 
   """
   def to(val, unit_to) do
     with %{unit: unit_from, value: value_from, kind: _} <- val,
       factor <- get_conversion(unit_from, unit_to),
-      new_value <- value_from * factor,
-      do: %Value{value: new_value, unit: unit_to, kind: val.kind}
+      new_value <- apply_conversion(value_from, factor),
+      rounded_value <- Float.round(new_value * 1.0, Application.get_env(:ex_uc, :precision)),
+    do: %Value{value: rounded_value, unit: unit_to, kind: val.kind}
   end
 
   @doc """
@@ -154,4 +155,7 @@ defmodule ExUc do
 
     %{from: from, to: to, by: val}
   end
+
+  defp apply_conversion(val, factor) when is_number(factor), do: val * factor
+  defp apply_conversion(val, formule) when is_function(formule), do: formule.(val)
 end

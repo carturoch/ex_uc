@@ -11,4 +11,4 @@ config :ex_uc, :temperature_conversions,
   F_to_C: &((&1 - 32) / 1.8),
   F_to_K: &((&1 + 459.67) / 1.8),
   K_to_F: &(&1 * 1.8 - 459.67),
-  K_to_C: &(273.15 - &1)
+  K_to_C: &(&1 - 273.15)
