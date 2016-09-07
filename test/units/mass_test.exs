@@ -18,8 +18,7 @@ defmodule Units.MassTest do
   end
 
   test "Convert kilograms to pounds" do
-    conversion = from("100 g") |> to(:lb) |> as_string
-    assert conversion == "0.22 lb"
+    conversion = from("1kg") |> to(:lb) |> as_string
+    assert conversion == "2.20 lb"
   end
-
 end

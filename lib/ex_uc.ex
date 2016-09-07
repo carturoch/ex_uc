@@ -50,7 +50,7 @@ defmodule ExUc do
       kind_str <- kind_of_unit(unit),
       _next when not is_nil(kind_str) <- kind_str,
       kind <- String.to_atom(kind_str),
-      do: %Value{value: val, unit: unit, kind: kind}
+    do: %Value{value: val, unit: unit, kind: kind}
   end
 
   @doc """
@@ -68,18 +68,22 @@ defmodule ExUc do
     iex> ExUc.to(%{value: 20, unit: :g, kind: :mass}, :mg)
     %ExUc.Value{value: 20000, unit: :mg, kind: :mass}
 
-    iex> ExUc.to(nil, :g)
-    nil
-
     iex> ExUc.to("15C", :K)
     %ExUc.Value{value: 288.15, unit: :K, kind: :temperature}
 
+    _Errors:_
+    iex> ExUc.to(nil, :g)
+    {:error, "undefined origin"}
+
+    iex> ExUc.to("10kg", :xl)
+    {:error, "undefined conversion"}
+
   """
-  def to(val, _unit_to) when is_nil(val), do: nil
+  def to(val, _unit_to) when is_nil(val), do: {:error, "undefined origin"}
   def to(val, unit_to) when is_binary(val), do: to(from(val), unit_to)
   def to(val, unit_to) when is_map(val) do
     with %{unit: unit_from, value: value_from, kind: _} <- val,
-      factor <- get_conversion(unit_from, unit_to),
+      {:ok, factor} <- get_conversion(unit_from, unit_to),
       new_value <- apply_conversion(value_from, factor),
     do: %Value{value: new_value, unit: unit_to, kind: val.kind}
   end
@@ -153,16 +157,23 @@ defmodule ExUc do
   ## Examples
 
     iex>ExUc.get_conversion(:g, :mg)
-    1000
+    {:ok, 1000}
+
+    iex>ExUc.get_conversion(:g, :zz)
+    {:error, "undefined conversion"}
 
   """
   def get_conversion(from, to) do
     conversion_key = "#{kind_of_unit(from)}_conversions" |> String.to_atom
 
-    Application.get_env(:ex_uc, conversion_key)
+    conversion = Application.get_env(:ex_uc, conversion_key)
     |> Enum.map(&parse_conversion/1)
     |> Enum.find(fn map -> {map[:from], map[:to]} == {from, to} end)
-    |> Map.get(:by)
+
+    case conversion do
+      nil -> {:error, "undefined conversion"}
+      _ -> {:ok, Map.get(conversion, :by)}
+    end
   end
 
   defp parse_conversion({key, val}) do
