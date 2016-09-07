@@ -95,7 +95,7 @@ defmodule ExUc do
   ## Examples
 
     iex> ExUc.as_string(%ExUc.Value{value: 10, unit: :m})
-    "10m"
+    "10.00m"
   """
   def as_string(val) do
     "#{val}"
@@ -175,17 +175,6 @@ defmodule ExUc do
     %{from: from, to: to, by: val}
   end
 
-  @doc """
-  Apply the conversion rule to the given value.
-
-  Returns Float.t
-
-  ## Parameters
-
-    - val: Value in the original unit.
-    - factor|formule: Numeric paremeters are considered multiplication factors. Else a clousure is expected.
-
-  """
   defp apply_conversion(val, factor) when is_number(factor), do: val * factor
   defp apply_conversion(val, formule) when is_function(formule), do: formule.(val)
 end

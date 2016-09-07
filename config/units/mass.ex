@@ -9,5 +9,5 @@ config :ex_uc, :mass_units,
 config :ex_uc, :mass_conversions,
   g_to_kg: 0.001,
   g_to_mg: 1000,
-  g_to_lb: 0.0022
-  
+  g_to_lb: 0.0022,
+  kg_to_g: 1000

@@ -1,16 +1,16 @@
-defmodule TemperatureTest do
+defmodule Units.TemperatureTest do
   use ExUnit.Case
 
   import ExUc
 
   test "Celcius to Fahrenheit" do
     conversion = from("20C") |> to(:F) |> as_string
-    assert conversion == "68.0F"
+    assert conversion == "68.00F"
   end
 
   test "Fahrenheit to Celcius" do
     conversion = from("68F") |> to(:C) |> as_string
-    assert conversion == "20.0C"
+    assert conversion == "20.00C"
   end
 
   test "Kelvin to Celcius" do
