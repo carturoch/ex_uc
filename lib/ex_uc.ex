@@ -14,12 +14,12 @@ defmodule ExUc do
   ```elixir
   import ExUc
 
-  from("25C") |> to(:F) |> as_string # "77F"
+  from("25C") |> to(:F) |> as_string # "77 F"
   ```
 
   Or simply:
   ```elixir
-  "\#{ExUc.to("72F", :K)}" # "295.37K"
+  "\#{ExUc.to("72F", :K)}" # "295.37 K"
   ```
   """
 
@@ -94,7 +94,7 @@ defmodule ExUc do
   ## Examples
 
     iex> ExUc.as_string(%ExUc.Value{value: 10, unit: :m})
-    "10.00m"
+    "10.00 m"
   """
   def as_string(val) do
     "#{val}"

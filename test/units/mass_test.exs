@@ -9,7 +9,17 @@ defmodule Units.MassTest do
     |> to(:mg)
     |> as_string
 
-    assert conversion == "250000.00mg"
+    assert conversion == "250000.00 mg"
+  end
+
+  test "Convert grams to pounds" do
+    conversion = from("100 g") |> to(:lb) |> as_string
+    assert conversion == "0.22 lb"
+  end
+
+  test "Convert kilograms to pounds" do
+    conversion = from("100 g") |> to(:lb) |> as_string
+    assert conversion == "0.22 lb"
   end
 
 end

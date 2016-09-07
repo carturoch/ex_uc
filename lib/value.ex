@@ -3,7 +3,7 @@ defmodule ExUc.Value do
 end
 
 defimpl String.Chars, for: ExUc.Value do
-  def to_string(val), do: "#{format_value(val.value)}#{val.unit}"
+  def to_string(val), do: "#{format_value(val.value)} #{val.unit}"
 
   defp format_value(int) when is_integer(int), do: "#{int}.00"
   defp format_value(float) when is_float(float) do
