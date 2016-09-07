@@ -57,8 +57,16 @@ defmodule ExUc do
     iex> ExUc.to(%{value: 20, unit: :g, kind: :mass}, :mg)
     %ExUc.Value{value: 20000.0, unit: :mg, kind: :mass}
 
+    iex> ExUc.to(nil, :g)
+    nil
+
+    iex> ExUc.to("15C", :K)
+    %ExUc.Value{value: 288.15, unit: :K, kind: :temperature}
+
   """
-  def to(val, unit_to) do
+  def to(val, _unit_to) when is_nil(val), do: nil
+  def to(val, unit_to) when is_binary(val), do: to(from(val), unit_to)
+  def to(val, unit_to) when is_map(val) do
     with %{unit: unit_from, value: value_from, kind: _} <- val,
       factor <- get_conversion(unit_from, unit_to),
       new_value <- apply_conversion(value_from, factor),
