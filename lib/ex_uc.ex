@@ -66,7 +66,7 @@ defmodule ExUc do
   ## Examples
 
     iex> ExUc.to(%{value: 20, unit: :g, kind: :mass}, :mg)
-    %ExUc.Value{value: 20000.0, unit: :mg, kind: :mass}
+    %ExUc.Value{value: 20000, unit: :mg, kind: :mass}
 
     iex> ExUc.to(nil, :g)
     nil
@@ -81,8 +81,7 @@ defmodule ExUc do
     with %{unit: unit_from, value: value_from, kind: _} <- val,
       factor <- get_conversion(unit_from, unit_to),
       new_value <- apply_conversion(value_from, factor),
-      rounded_value <- Float.round(new_value * 1.0, Application.get_env(:ex_uc, :precision)),
-    do: %Value{value: rounded_value, unit: unit_to, kind: val.kind}
+    do: %Value{value: new_value, unit: unit_to, kind: val.kind}
   end
 
   @doc """
