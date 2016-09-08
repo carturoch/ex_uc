@@ -6,7 +6,7 @@ defmodule ExUc do
 
   It could be used as:
   ```elixir
-  value = ExUc.from("5' 2\" ")
+  value = ExUc.from("5' 2\\"")
     |> ExUc.to(:m)
     |> ExUc.as_string
   ```
@@ -37,16 +37,19 @@ defmodule ExUc do
     - str: String containing the value and unit to convert.
 
   ## Examples
+  ```
 
-    iex>ExUc.from("500 mg")
-    %ExUc.Value{value: 500.0, unit: :mg, kind: :mass}
+  iex>ExUc.from("500 mg")
+  %ExUc.Value{value: 500.0, unit: :mg, kind: :mass}
 
-    iex>ExUc.from("5 alien")
-    nil
+  iex>ExUc.from("5 alien")
+  nil
+
+  ```
   """
   def from(str) do
     {val, unit_str} = cond do
-      Special.is_pounds_and_ounces?(str) -> Special.lb_oz_to_lb(str) 
+      Special.is_pounds_and_ounces?(str) -> Special.lb_oz_to_lb(str)
       true -> Float.parse(str)
     end
 
@@ -68,20 +71,21 @@ defmodule ExUc do
     - unit: Atom representing the unit to convert the `val` to.
 
   ## Examples
+  ```
+  iex> ExUc.to(%{value: 20, unit: :g, kind: :mass}, :mg)
+  %ExUc.Value{value: 20000, unit: :mg, kind: :mass}
 
-    iex> ExUc.to(%{value: 20, unit: :g, kind: :mass}, :mg)
-    %ExUc.Value{value: 20000, unit: :mg, kind: :mass}
+  iex> ExUc.to("15C", :K)
+  %ExUc.Value{value: 288.15, unit: :K, kind: :temperature}
 
-    iex> ExUc.to("15C", :K)
-    %ExUc.Value{value: 288.15, unit: :K, kind: :temperature}
+  # Errors:
+  iex> ExUc.to(nil, :g)
+  {:error, "undefined origin"}
 
-    _Errors:_
-    iex> ExUc.to(nil, :g)
-    {:error, "undefined origin"}
+  iex> ExUc.to("10kg", :xl)
+  {:error, "undefined conversion"}
 
-    iex> ExUc.to("10kg", :xl)
-    {:error, "undefined conversion"}
-
+  ```
   """
   def to(val, _unit_to) when is_nil(val), do: {:error, "undefined origin"}
   def to(val, unit_to) when is_binary(val), do: to(from(val), unit_to)
@@ -100,9 +104,12 @@ defmodule ExUc do
     - val: ExUc.Value to stringify.
 
   ## Examples
+  ```
 
-    iex> ExUc.as_string(%ExUc.Value{value: 10, unit: :m})
-    "10.00 m"
+  iex> ExUc.as_string(%ExUc.Value{value: 10, unit: :m})
+  "10.00 m"
+
+  ```
   """
   def as_string(val) do
     "#{val}"
@@ -128,11 +135,12 @@ defmodule ExUc do
     - unit: Atom representing the unit to find the kind.
 
   ## Examples
+  ```
 
-    iex>ExUc.kind_of_unit(:kg)
-    "mass"
+  iex>ExUc.kind_of_unit(:kg)
+  "mass"
 
-  Returns String
+  ```
   """
   def kind_of_unit(unit) do
     kind = Application.get_all_env(:ex_uc)
@@ -159,13 +167,15 @@ defmodule ExUc do
     - to: Atom representing the unit to convert to
 
   ## Examples
+  ```
 
-    iex>ExUc.get_conversion(:g, :mg)
-    {:ok, 1000}
+  iex>ExUc.get_conversion(:g, :mg)
+  {:ok, 1000}
 
-    iex>ExUc.get_conversion(:g, :zz)
-    {:error, "undefined conversion"}
+  iex>ExUc.get_conversion(:g, :zz)
+  {:error, "undefined conversion"}
 
+  ```
   """
   def get_conversion(from, to) do
     conversion_key = "#{kind_of_unit(from)}_conversions" |> String.to_atom

@@ -5,7 +5,6 @@ defmodule Special do
   For conversions where simple formules are not enough the config file will
   reference using an atom a method of this module.
 
-  _*Note:* Every method should expect a single value as argument._
   """
 
 
@@ -19,10 +18,12 @@ defmodule Special do
     - value: Numeric value for kilograms.
 
   ## Examples
+  ```
 
-    iex>Special.kg_to_lb_oz(20.15)
-    "44 lb 5.28 oz"
+  iex>Special.kg_to_lb_oz(20.15)
+  "44 lb 5.28 oz"
 
+  ```
   """
   def kg_to_lb_oz(kgs) do
     as_lbs = kgs * 2.2
@@ -46,13 +47,15 @@ defmodule Special do
     - str: String with values and units.
 
   ## Examples
+  ```
 
-    iex>Special.is_pounds_and_ounces?("23 lb 4 oz")
-    true
+  iex>Special.is_pounds_and_ounces?("23 lb 4 oz")
+  true
 
-    iex>Special.is_pounds_and_ounces?("12.566 lb")
-    false
+  iex>Special.is_pounds_and_ounces?("12.566 lb")
+  false
 
+  ```
   """
   def is_pounds_and_ounces?(str) do
     String.match?(str, ~r/(\d+(\.\d+)?)\s*lb.(\d+(\.\d+)?)\s*oz/)

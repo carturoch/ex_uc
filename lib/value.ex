@@ -1,4 +1,8 @@
 defmodule ExUc.Value do
+  @moduledoc """
+  Structured represtation of a value with unit.
+  """
+
   defstruct value: 0, unit: :none, kind: :any
 end
 
