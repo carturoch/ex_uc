@@ -46,12 +46,7 @@ defmodule ExUc do
   """
   def from(str) do
     {val, unit_str} = cond do
-      Special.is_pounds_and_ounces?(str)  ->
-          [pounds_str, _lb, ounces_str, _oz] = String.split(str, " ")
-          {pounds, _} = Float.parse(pounds_str)
-          {ounces, _} = Float.parse(ounces_str)
-          all_pounds = pounds + (ounces * 0.063)
-          {all_pounds, "lb"}
+      Special.is_pounds_and_ounces?(str) -> Special.lb_oz_to_lb(str) 
       true -> Float.parse(str)
     end
 

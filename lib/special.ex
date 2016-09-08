@@ -57,4 +57,15 @@ defmodule Special do
   def is_pounds_and_ounces?(str) do
     String.match?(str, ~r/(\d+(\.\d+)?)\s*lb.(\d+(\.\d+)?)\s*oz/)
   end
+
+  @doc """
+  Converts from pounds and ounces to pounds.
+  """
+  def lb_oz_to_lb(str) do
+    [pounds_str, _lb, ounces_str, _oz] = String.split(str, " ")
+    {pounds, _} = Float.parse(pounds_str)
+    {ounces, _} = Float.parse(ounces_str)
+    all_pounds = pounds + (ounces * 0.063)
+    {all_pounds, "lb"}
+  end
 end
