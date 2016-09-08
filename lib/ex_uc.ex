@@ -24,6 +24,7 @@ defmodule ExUc do
   """
 
   alias ExUc.Value
+  alias ExUc.Special
 
   @doc """
   Parses a string into a structured value. When is not possible to get
