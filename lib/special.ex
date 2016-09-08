@@ -1,4 +1,4 @@
-defmodule Special do
+defmodule ExUc.Special do
   @moduledoc """
   # Special conversions.
 
@@ -20,7 +20,7 @@ defmodule Special do
   ## Examples
   ```
 
-  iex>Special.kg_to_lb_oz(20.15)
+  iex>ExUc.Special.kg_to_lb_oz(20.15)
   "44 lb 5.28 oz"
 
   ```
@@ -38,7 +38,7 @@ defmodule Special do
   end
 
   @doc """
-  Checks if a string is a special pounds and ounces value
+  Checks if a string is a ExUc.Special pounds and ounces value
 
   Returns Boolean
 
@@ -49,10 +49,10 @@ defmodule Special do
   ## Examples
   ```
 
-  iex>Special.is_pounds_and_ounces?("23 lb 4 oz")
+  iex>ExUc.Special.is_pounds_and_ounces?("23 lb 4 oz")
   true
 
-  iex>Special.is_pounds_and_ounces?("12.566 lb")
+  iex>ExUc.Special.is_pounds_and_ounces?("12.566 lb")
   false
 
   ```

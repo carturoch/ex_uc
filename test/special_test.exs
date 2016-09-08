@@ -1,4 +1,4 @@
 defmodule SpecialTest do
   use ExUnit.Case
-  doctest Special
+  doctest ExUc.Special
 end
