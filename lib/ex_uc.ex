@@ -187,4 +187,5 @@ defmodule ExUc do
 
   defp apply_conversion(val, factor) when is_number(factor), do: val * factor
   defp apply_conversion(val, formule) when is_function(formule), do: formule.(val)
+  defp apply_conversion(val, method) when is_atom(method), do: apply(Special, method, [val])
 end
