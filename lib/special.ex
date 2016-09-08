@@ -35,4 +35,26 @@ defmodule Special do
       _ -> "#{lbs} lb #{ozs} oz"
     end
   end
+
+  @doc """
+  Checks if a string is a special pounds and ounces value
+
+  Returns Boolean
+
+  ## Parameters
+
+    - str: String with values and units.
+
+  ## Examples
+
+    iex>Special.is_pounds_and_ounces?("23 lb 4 oz")
+    true
+
+    iex>Special.is_pounds_and_ounces?("12.566 lb")
+    false
+
+  """
+  def is_pounds_and_ounces?(str) do
+    String.match?(str, ~r/(\d+(\.\d+)?)\s*lb.(\d+(\.\d+)?)\s*oz/)
+  end
 end

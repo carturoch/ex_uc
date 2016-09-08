@@ -45,8 +45,17 @@ defmodule ExUc do
     nil
   """
   def from(str) do
-    with {val, unit_str} <- Float.parse(str),
-      unit <- unit_str |> String.trim |> String.to_atom,
+    {val, unit_str} = cond do
+      Special.is_pounds_and_ounces?(str)  ->
+          [pounds_str, _lb, ounces_str, _oz] = String.split(str, " ")
+          {pounds, _} = Float.parse(pounds_str)
+          {ounces, _} = Float.parse(ounces_str)
+          all_pounds = pounds + (ounces * 0.063)
+          {all_pounds, "lb"}
+      true -> Float.parse(str)
+    end
+
+    with unit <- unit_str |> String.trim |> String.to_atom,
       kind_str <- kind_of_unit(unit),
       _next when not is_nil(kind_str) <- kind_str,
       kind <- String.to_atom(kind_str),

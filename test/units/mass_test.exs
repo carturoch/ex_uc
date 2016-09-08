@@ -38,9 +38,13 @@ defmodule Units.MassTest do
     assert conversion == "2.80 kg"
   end
 
-  @tag :current
   test "Convert kilograms to pounds and ounces" do
     conversion = from("1.56 kg") |> to(:lb_oz) |> as_string
     assert conversion == "3 lb 6.91 oz"
+  end
+
+  test "Convert pounds and ounces to kilograms" do
+    conversion = from("3 lb 6.91 oz") |> to(:kg) |> as_string
+    assert conversion == "1.55 kg"
   end
 end
