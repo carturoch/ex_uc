@@ -160,6 +160,8 @@ defmodule ExUc do
   @doc """
   Gets the conversion factor for the units
 
+  If can find inverse relation when the conversion is a factor.
+
   Returns Atom.t, Integer.t, Float.t
 
   ## Parameters
@@ -176,28 +178,27 @@ defmodule ExUc do
   iex>ExUc.get_conversion(:g, :zz)
   {:error, "undefined conversion"}
 
+  # This relation has not been defined but
+  # the inverse is based on a factor, so is valid.
+  iex>ExUc.get_conversion(:km, :m)
+  {:ok, 1.0e3}
+
   ```
   """
   def get_conversion(from, to) do
     conversion_key = "#{kind_of_unit(from)}_conversions" |> String.to_atom
 
-    conversion = Application.get_env(:ex_uc, conversion_key)
-    |> Enum.map(&parse_conversion/1)
-    |> Enum.find(fn map -> {map[:from], map[:to]} == {from, to} end)
+    conversions = Application.get_env(:ex_uc, conversion_key) |> Enum.into(%{})
+    regular_key = "#{from}_to_#{to}" |> String.to_atom
+    inverted_key = "#{to}_to_#{from}" |> String.to_atom
 
-    case conversion do
-      nil -> {:error, "undefined conversion"}
-      _ -> {:ok, Map.get(conversion, :by)}
+    cond do
+      Map.has_key?(conversions, regular_key) ->
+        {:ok, Map.get(conversions, regular_key)}
+      Map.has_key?(conversions, inverted_key) && is_number(Map.get(conversions, inverted_key)) ->
+        {:ok, 1 / Map.get(conversions, inverted_key)}
+      true -> {:error, "undefined conversion"}
     end
-  end
-
-  defp parse_conversion({key, val}) do
-    [from, to] = key
-    |> Atom.to_string
-    |> String.split("_to_")
-    |> Enum.map(&String.to_atom/1)
-
-    %{from: from, to: to, by: val}
   end
 
   defp apply_conversion(val, factor) when is_number(factor), do: val * factor

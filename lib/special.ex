@@ -29,7 +29,8 @@ defmodule ExUc.Special do
     as_lbs = kgs * 2.2
     lbs = trunc(as_lbs)
     partial_lbs = as_lbs - lbs
-    ozs = Float.round(partial_lbs * 16, 2)
+    precision = Application.get_env(:ex_uc, :precision)
+    ozs = Float.round(partial_lbs * 16, precision)
 
     case ozs do
       0 -> "#{lbs} lb 0 oz"
