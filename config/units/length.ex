@@ -15,4 +15,6 @@ config :ex_uc, :length_conversions,
   m_to_cm: 100,
   m_to_mm: 1000,
   m_to_in: 39.37,
-  m_to_ft: 3.281
+  m_to_ft: 3.281,
+  m_to_ft_in: :m_to_ft_in,
+  ft_to_in: 12

@@ -110,8 +110,12 @@ defmodule ExUc do
   iex> ExUc.as_string(%ExUc.Value{value: 10, unit: :m})
   "10.00 m"
 
+  iex> ExUc.as_string({:error, "some error"})
+  "some error"
+
   ```
   """
+  def as_string({:error, msg}) when is_binary(msg), do: msg
   def as_string(val) do
     "#{val}"
   end

@@ -7,11 +7,12 @@ defmodule ExUc.Special do
 
   """
 
+  @precision Application.get_env(:ex_uc, :precision)
 
   @doc """
   Converts from kilograms to pounds and ounces
 
-  Returns String
+  Returns String.t
 
   ## Parameters
 
@@ -29,12 +30,40 @@ defmodule ExUc.Special do
     as_lbs = kgs * 2.2
     lbs = trunc(as_lbs)
     partial_lbs = as_lbs - lbs
-    precision = Application.get_env(:ex_uc, :precision)
-    ozs = Float.round(partial_lbs * 16, precision)
+    ozs = Float.round(partial_lbs * 16, @precision)
 
     case ozs do
       0 -> "#{lbs} lb 0 oz"
       _ -> "#{lbs} lb #{ozs} oz"
+    end
+  end
+
+  @doc """
+  Converts from meters to feet and inches.
+
+  Returns String.t
+
+  ## Parameters
+
+    - meters: Numeric meters value
+
+  ## Examples
+  ```
+
+  iex> ExUc.Special.m_to_ft_in(10.35)
+  "33 ft 11.5 in"
+
+  ```
+  """
+  def m_to_ft_in(meters) do
+    as_feet = meters * 3.281
+    feet = trunc(as_feet)
+    partial_feet = as_feet - feet
+    inches = Float.round(partial_feet * 12, @precision)
+
+    case inches do
+      0 -> "#{feet} ft 0 in"
+      _ -> "#{feet} ft #{inches} in"
     end
   end
 
@@ -61,6 +90,7 @@ defmodule ExUc.Special do
   def is_pounds_and_ounces?(str) do
     String.match?(str, ~r/(\d+(\.\d+)?)\s*lb.(\d+(\.\d+)?)\s*oz/)
   end
+
 
   @doc """
   Converts from pounds and ounces to pounds.
