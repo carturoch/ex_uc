@@ -68,7 +68,7 @@ defmodule ExUc.Special do
   end
 
   @doc """
-  Checks if a string is a ExUc.Special pounds and ounces value
+  Checks if a string is a special pounds and ounces value
 
   Returns Boolean
 
@@ -91,9 +91,46 @@ defmodule ExUc.Special do
     String.match?(str, ~r/(\d+(\.\d+)?)\s*lb.(\d+(\.\d+)?)\s*oz/)
   end
 
+  @doc """
+  Checks if a string is a special feet and inches value.
+
+  Returns Boolean
+
+  ## Parameters
+
+    - str: String with values and units.
+
+  ## Examples
+  ```
+
+  iex>ExUc.Special.is_feet_and_inches?("6 ft 2.2 in")
+  true
+
+  iex>ExUc.Special.is_feet_and_inches?("6 ft")
+  false
+
+  ```
+  """
+  def is_feet_and_inches?(str) do
+    String.match?(str, ~r/(\d+(\.\d+)?)\s*ft.(\d+(\.\d+)?)\s*in/)
+  end
 
   @doc """
-  Converts from pounds and ounces to pounds.
+  Converts from pounds and ounces, to pounds.
+
+  Returns {VALUE_IN_POUNDS, "lb"}
+
+  ## Parameters
+
+    - str: String with pounds and ounces value
+
+  ## Examples
+  ```
+
+  iex>ExUc.Special.lb_oz_to_lb("4 lb 5 oz")
+  {4.315, "lb"}
+
+  ```
   """
   def lb_oz_to_lb(str) do
     [pounds_str, _lb, ounces_str, _oz] = String.split(str, " ")
@@ -101,5 +138,30 @@ defmodule ExUc.Special do
     {ounces, _} = Float.parse(ounces_str)
     all_pounds = pounds + (ounces * 0.063)
     {all_pounds, "lb"}
+  end
+
+  @doc """
+  Converts from feet and inches, to feet.
+
+  Returns {VALUE_IN_FEET, "ft"}
+
+  ## Parameters
+
+    - str: String with feet and inches value
+
+  ## Examples
+  ```
+
+  iex>ExUc.Special.ft_in_to_ft("6 ft 2 in")
+  {6.166, "ft"}
+
+  ```
+  """
+  def ft_in_to_ft(str) do
+    [feet_str, _lb, inches_str, _oz] = String.split(str, " ")
+    {feet, _} = Float.parse(feet_str)
+    {inches, _} = Float.parse(inches_str)
+    all_feet = feet + (inches * 0.083)
+    {all_feet, "ft"}
   end
 end

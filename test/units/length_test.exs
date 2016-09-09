@@ -20,4 +20,9 @@ defmodule Units.LengthTest do
     conversion = from("123.5 m") |> to(:ft_in) |> as_string
     assert conversion == "405 ft 2.44 in"
   end
+
+  test "Feet and inches to meters" do
+    conversion = from("45 ft 2.5 in") |> to(:m) |> as_string
+    assert conversion == "13.78 m"
+  end
 end

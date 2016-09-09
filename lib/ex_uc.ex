@@ -51,6 +51,7 @@ defmodule ExUc do
   def from(str) do
     {val, unit_str} = cond do
       Special.is_pounds_and_ounces?(str) -> Special.lb_oz_to_lb(str)
+      Special.is_feet_and_inches?(str) -> Special.ft_in_to_ft(str)
       true -> Float.parse(str)
     end
 
