@@ -45,6 +45,6 @@ defmodule Units.MassTest do
 
   test "Convert pounds and ounces to kilograms" do
     conversion = from("3 lb 6.91 oz") |> to(:kg) |> as_string
-    assert conversion == "1.55 kg"
+    assert conversion == "1.54 kg"
   end
 end

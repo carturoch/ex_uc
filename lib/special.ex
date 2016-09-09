@@ -27,10 +27,13 @@ defmodule ExUc.Special do
   ```
   """
   def kg_to_lb_oz(kgs) do
-    as_lbs = kgs * 2.2
+    {:ok, kg_to_lb} = ExUc.get_conversion(:kg, :lb)
+    {:ok, lb_to_oz} = ExUc.get_conversion(:lb, :oz)
+
+    as_lbs = kgs * kg_to_lb
     lbs = trunc(as_lbs)
     partial_lbs = as_lbs - lbs
-    ozs = Float.round(partial_lbs * 16, @precision)
+    ozs = Float.round(partial_lbs * lb_to_oz, @precision)
 
     case ozs do
       0 -> "#{lbs} lb 0 oz"
@@ -56,10 +59,13 @@ defmodule ExUc.Special do
   ```
   """
   def m_to_ft_in(meters) do
-    as_feet = meters * 3.281
+    {:ok, m_to_ft} = ExUc.get_conversion(:m, :ft)
+    {:ok, ft_to_in} = ExUc.get_conversion(:ft, :in)
+
+    as_feet = meters * m_to_ft
     feet = trunc(as_feet)
     partial_feet = as_feet - feet
-    inches = Float.round(partial_feet * 12, @precision)
+    inches = Float.round(partial_feet * ft_to_in, @precision)
 
     case inches do
       0 -> "#{feet} ft 0 in"
@@ -128,7 +134,7 @@ defmodule ExUc.Special do
   ```
 
   iex>ExUc.Special.lb_oz_to_lb("4 lb 5 oz")
-  {4.315, "lb"}
+  {4.3125, "lb"}
 
   ```
   """
@@ -136,7 +142,8 @@ defmodule ExUc.Special do
     [pounds_str, _lb, ounces_str, _oz] = String.split(str, " ")
     {pounds, _} = Float.parse(pounds_str)
     {ounces, _} = Float.parse(ounces_str)
-    all_pounds = pounds + (ounces * 0.063)
+    {:ok, oz_to_lb} = ExUc.get_conversion(:oz, :lb)
+    all_pounds = pounds + (ounces * oz_to_lb)
     {all_pounds, "lb"}
   end
 
@@ -152,8 +159,8 @@ defmodule ExUc.Special do
   ## Examples
   ```
 
-  iex>ExUc.Special.ft_in_to_ft("6 ft 2 in")
-  {6.166, "ft"}
+  iex>ExUc.Special.ft_in_to_ft("7 ft 6 in")
+  {7.5, "ft"}
 
   ```
   """
@@ -161,7 +168,8 @@ defmodule ExUc.Special do
     [feet_str, _lb, inches_str, _oz] = String.split(str, " ")
     {feet, _} = Float.parse(feet_str)
     {inches, _} = Float.parse(inches_str)
-    all_feet = feet + (inches * 0.083)
+    {:ok, in_to_ft} = ExUc.get_conversion(:in, :ft)
+    all_feet = feet + (inches * in_to_ft)
     {all_feet, "ft"}
   end
 end
