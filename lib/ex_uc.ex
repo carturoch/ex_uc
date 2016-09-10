@@ -90,6 +90,7 @@ defmodule ExUc do
   ```
   """
   def to(val, _unit_to) when is_nil(val), do: {:error, "undefined origin"}
+  def to(val, unit_to) when is_binary(unit_to), do: to(val, String.to_atom(unit_to))
   def to(val, unit_to) when is_binary(val), do: to(from(val), unit_to)
   def to(val, unit_to) when is_map(val) do
     with %{unit: unit_from, value: value_from, kind: _} <- val,
@@ -185,6 +186,28 @@ defmodule ExUc do
     end
   end
 
+  @doc """
+  Gets the unit among its aliases that can be used as a key in conversions
+
+  ## Parameters
+
+    - alias: Atom with a unit aliases.
+    - kind: Atom or String for the kind where the alias is.
+
+  ## Examples
+  ```
+
+  iex>ExUc.get_key_unit(:meter, "length")
+  :m
+
+  iex>ExUc.get_key_unit(:pounds, :mass)
+  :lb
+
+  iex>ExUc.get_key_unit(:r4R3, :mass)
+  nil
+
+  ```
+  """
   def get_key_unit(alias, kind) do
     kind_token = "#{kind}_units" |> String.to_atom
     with aliases <- Map.get(units, kind_token),
