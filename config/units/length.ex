@@ -8,7 +8,8 @@ config :ex_uc, :length_units,
   ft: ~w(feet foot)a,
   in: ~w(inches)a,
   yd: ~w(yard yards yds)a,
-  mi: ~w(mile miles)a
+  mi: ~w(mile miles)a,
+  ft_in: "feet and inches"
 
 config :ex_uc, :length_conversions,
   m_to_km: 0.001,

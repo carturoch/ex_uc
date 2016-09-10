@@ -224,7 +224,7 @@ defmodule ExUc do
     kind = kind_of_unit(from_alias)
     conversion_key = "#{kind}_conversions" |> String.to_atom
 
-    {from, to} = {get_key_unit(from_alias, kind), to_alias}
+    {from, to} = {get_key_unit(from_alias, kind), get_key_unit(to_alias, kind)}
     conversions = Application.get_env(:ex_uc, conversion_key) |> Enum.into(%{})
     regular_key = "#{from}_to_#{to}" |> String.to_atom
     inverted_key = "#{to}_to_#{from}" |> String.to_atom

@@ -5,7 +5,8 @@ config :ex_uc, :mass_units,
   kg: ~w(kilograms kilogram)a,
   mg: ~w(milligrams)a,
   lb: ~w(pounds pound lbs)a,
-  oz: ~w(ounces ounce oz)a
+  oz: ~w(ounces ounce oz)a,
+  lb_oz: "pounds and ounces"
 
 config :ex_uc, :mass_conversions,
   g_to_kg: 0.001,
