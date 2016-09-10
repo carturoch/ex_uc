@@ -25,4 +25,10 @@ defmodule Units.LengthTest do
     conversion = from("45 ft 2.5 in") |> to(:m) |> as_string
     assert conversion == "13.78 m"
   end
+
+  @tag :current
+  test "Use and alias for feet" do
+    conversion = from("50 meters") |> to(:km) |> as_string
+    assert conversion == "0.05 km"
+  end
 end

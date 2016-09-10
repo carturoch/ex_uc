@@ -122,19 +122,40 @@ defmodule ExUc do
   end
 
   @doc """
-  Gets a list of all the unit symbols defined in config.
+  Gets a map with every kind of unit defined in config.
+
+  The result has a very traversable structure as:
+  ```
+  %{
+    kind_of_unit: [
+      alias_0: :main,
+      alias_N: :main,
+    ],
+    ...
+  }
+  ```
 
   Returns List
   """
   def units do
     Application.get_all_env(:ex_uc)
     |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)
-    |> Enum.flat_map(fn {_key, opts} -> opts end)
-    |> Enum.map(fn {unit, _name} -> unit end)
+    |> Enum.map(fn {kind, units} ->
+      units_map = units
+      |> Enum.flat_map(fn {main, aliases} ->
+        cond do
+          is_list(aliases) -> Keyword.merge([{main, main}], for(alias <- aliases, do: {alias, main}))
+          is_binary(aliases) -> [{main, main},{String.to_atom(aliases), main}]
+          true -> [{main, main},{aliases, main}]
+        end
+      end)
+      {kind, units_map}
+    end)
+    |> Enum.into(%{})
   end
 
   @doc """
-  Gets the kind of unit for the given unit.
+  Gets the kind of unit for ther given unit.
 
   ## Parameters
 
@@ -146,20 +167,29 @@ defmodule ExUc do
   iex>ExUc.kind_of_unit(:kg)
   "mass"
 
+  iex>ExUc.kind_of_unit(:meter)
+  "length"
+
   ```
   """
   def kind_of_unit(unit) do
-    kind = Application.get_all_env(:ex_uc)
-    |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)
-    |> Enum.find(fn {_kind, opts} -> opts |> Enum.into(%{}) |> Map.has_key?(unit) end)
+    kind_kw = units
+    |> Enum.find(fn {_kind, units} -> units |> Keyword.has_key?(unit) end)
 
-    case kind do
+    case kind_kw do
       {kind_name, _units} -> kind_name
         |> Atom.to_string
         |> String.replace_suffix("_units", "")
 
       _ -> nil
     end
+  end
+
+  def get_key_unit(alias, kind) do
+    kind_token = "#{kind}_units" |> String.to_atom
+    with aliases <- Map.get(units, kind_token),
+      main <- Keyword.get_values(aliases, alias) |> List.first,
+    do: main
   end
 
   @doc """
@@ -190,9 +220,11 @@ defmodule ExUc do
 
   ```
   """
-  def get_conversion(from, to) do
-    conversion_key = "#{kind_of_unit(from)}_conversions" |> String.to_atom
+  def get_conversion(from_alias, to_alias) do
+    kind = kind_of_unit(from_alias)
+    conversion_key = "#{kind}_conversions" |> String.to_atom
 
+    {from, to} = {get_key_unit(from_alias, kind), to_alias}
     conversions = Application.get_env(:ex_uc, conversion_key) |> Enum.into(%{})
     regular_key = "#{from}_to_#{to}" |> String.to_atom
     inverted_key = "#{to}_to_#{from}" |> String.to_atom
