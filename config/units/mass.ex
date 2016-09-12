@@ -1,11 +1,11 @@
 use Mix.Config
 
 config :ex_uc, :mass_units,
-  g: ~w(grams gram)a,
-  kg: ~w(kilograms kilogram)a,
-  mg: ~w(milligrams)a,
-  lb: ~w(pounds pound lbs)a,
-  oz: ~w(ounces ounce oz)a,
+  g: ~w(grams gram),
+  kg: ~w(kilograms kilogram),
+  mg: ~w(milligrams),
+  lb: ~w(pounds pound lbs),
+  oz: ~w(ounces ounce oz),
   lb_oz: "pounds and ounces"
 
 config :ex_uc, :mass_conversions,
