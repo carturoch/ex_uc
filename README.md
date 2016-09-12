@@ -78,7 +78,7 @@ Basically, two sections:
 
 ## Documentation
 
-Detailed documentation can be found at [hex docs](https://hexdocs.pm/ex_uc/api-reference.html).
+Detailed documentation can be found at [hex docs](https://hexdocs.pm/ex_uc).
 
 ## Note
 
@@ -86,4 +86,4 @@ This project was inspired by the awesome [Ruby gem](https://github.com/olbrich/r
 
 ## License
 
-[LICENSE]
+[MIT](https://github.com/carturoch/ex_uc/blob/master/License.md)
