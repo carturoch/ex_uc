@@ -24,12 +24,12 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
 
 ## Usage
 
-The quickest way is with the function `convert`:
+The quickest way is the function `convert`:
 ```elixir
 iex>ExUc.convert("5 pounds", "oz")
 "80.00 oz"
 ```
-This is just a shortcut in the 3 steps pipeline:
+This is just a shortcut for the 3-steps pipeline:
 ```elixir
 import ExUc
 
@@ -40,7 +40,7 @@ new_val = from("5 pounds")  # %ExUc.Value{unit: :lb, value: 5, kind: :mass}
 
 ### Errors
 
-Only two errors are returned when found, both self descriptive **strings**:
+Only two errors are returned when found, both as self descriptive **strings**:
 
   - `"undefined origin"`: Unit for the original value can't be parsed or found in the configuration.
   - `"undetermined conversion"`: Conversion between the given units can't be determined.
@@ -48,7 +48,7 @@ Only two errors are returned when found, both self descriptive **strings**:
 
 ## Configuration
 
-The only actually configurable variable is `precision`, by default is `2`. It determines only how many decimals will have the result when is converted to **string**.
+The only configurable variable is `precision`, by default `2`. It determines how many decimals will have the result when is converted into **string**.
 
 ### Adding more units
 
@@ -67,7 +67,7 @@ config :ex_uc, :<KIND>_conversions,
   <UNIT_X>_to_<UNIT_Y>: :special    # Atom referencing a special method.  
 ```
 
-Basically, two sections:
+Which have two sections:
 
   - **Aliases**
     - Key as `<KIND>_units` where kind identifies the type of measurement, e.g: _length_, _temperature_, _pressure_, etc.
