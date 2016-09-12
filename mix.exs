@@ -1,13 +1,20 @@
 defmodule ExUc.Mixfile do
   use Mix.Project
 
+  @version "0.1.5"
+
   def project do
     [app: :ex_uc,
-     version: "0.1.0-dev",
+     version: "#{@version}-dev",
      description: "Elixir Unit Converter",
      source_url: "https://github.com/carturoch/ex_uc",
      package: package(),
      elixir: "~> 1.3",
+     docs: [
+       main: "ExUc", source_ref: "v#{@version}",
+       source_url: "https://github.com/carturoch/ex_uc",
+       readme: true
+     ],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
@@ -36,7 +43,7 @@ defmodule ExUc.Mixfile do
   defp package do
     [
       name: :ex_uc,
-      files: ["lib", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
+      files: ["lib", "mix.exs", "README.MD", "License.md"],
       maintainers: ["Carlos Cuellar"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/carturoch/ex_uc"}

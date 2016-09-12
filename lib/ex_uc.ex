@@ -86,7 +86,7 @@ defmodule ExUc do
   {:error, "undefined origin"}
 
   iex> ExUc.to("10kg", :xl)
-  {:error, "undefined conversion"}
+  {:error, "undetermined conversion"}
 
   ```
   """
@@ -98,6 +98,28 @@ defmodule ExUc do
       {:ok, factor} <- Units.get_conversion(unit_from, unit_to),
       new_value <- apply_conversion(value_from, factor),
     do: %Value{value: new_value, unit: unit_to, kind: val.kind}
+  end
+
+  @doc """
+  Converts values between units of the same kind.
+
+  This function is a shortcut to get the string version of the converted value.
+
+  ## Parameters
+
+    - from_str: String with the value to convert.
+    - to: String or Atom with the unito to convert to.
+
+  ## Examples
+  ```
+
+  iex>ExUc.convert("5 pounds", "oz")
+  "80.00 oz"
+
+  ```
+  """
+  def convert(from_str, to) do
+    to(from_str, to) |> as_string
   end
 
   @doc """

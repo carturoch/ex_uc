@@ -134,7 +134,7 @@ defmodule ExUc.Units do
   {:ok, 1000}
 
   iex>ExUc.Units.get_conversion(:g, :zz)
-  {:error, "undefined conversion"}
+  {:error, "undetermined conversion"}
 
   # This relation has not been defined but
   # the inverse is based on a factor, so is valid.
@@ -157,7 +157,7 @@ defmodule ExUc.Units do
         {:ok, Map.get(conversions, regular_key)}
       Map.has_key?(conversions, inverted_key) && is_number(Map.get(conversions, inverted_key)) ->
         {:ok, 1 / Map.get(conversions, inverted_key)}
-      true -> {:error, "undefined conversion"}
+      true -> {:error, "undetermined conversion"}
     end
   end
 end
