@@ -7,6 +7,8 @@ defmodule ExUc.Special do
 
   """
 
+  alias ExUc.Units
+  
   @precision Application.get_env(:ex_uc, :precision)
 
   @doc """
@@ -27,8 +29,8 @@ defmodule ExUc.Special do
   ```
   """
   def kg_to_lb_oz(kgs) do
-    {:ok, kg_to_lb} = ExUc.get_conversion(:kg, :lb)
-    {:ok, lb_to_oz} = ExUc.get_conversion(:lb, :oz)
+    {:ok, kg_to_lb} = Units.get_conversion(:kg, :lb)
+    {:ok, lb_to_oz} = Units.get_conversion(:lb, :oz)
 
     as_lbs = kgs * kg_to_lb
     lbs = trunc(as_lbs)
@@ -59,8 +61,8 @@ defmodule ExUc.Special do
   ```
   """
   def m_to_ft_in(meters) do
-    {:ok, m_to_ft} = ExUc.get_conversion(:m, :ft)
-    {:ok, ft_to_in} = ExUc.get_conversion(:ft, :in)
+    {:ok, m_to_ft} = Units.get_conversion(:m, :ft)
+    {:ok, ft_to_in} = Units.get_conversion(:ft, :in)
 
     as_feet = meters * m_to_ft
     feet = trunc(as_feet)
@@ -142,7 +144,7 @@ defmodule ExUc.Special do
     [pounds_str, _lb, ounces_str, _oz] = String.split(str, " ")
     {pounds, _} = Float.parse(pounds_str)
     {ounces, _} = Float.parse(ounces_str)
-    {:ok, oz_to_lb} = ExUc.get_conversion(:oz, :lb)
+    {:ok, oz_to_lb} = Units.get_conversion(:oz, :lb)
     all_pounds = pounds + (ounces * oz_to_lb)
     {all_pounds, "lb"}
   end
@@ -168,7 +170,7 @@ defmodule ExUc.Special do
     [feet_str, _lb, inches_str, _oz] = String.split(str, " ")
     {feet, _} = Float.parse(feet_str)
     {inches, _} = Float.parse(inches_str)
-    {:ok, in_to_ft} = ExUc.get_conversion(:in, :ft)
+    {:ok, in_to_ft} = Units.get_conversion(:in, :ft)
     all_feet = feet + (inches * in_to_ft)
     {all_feet, "ft"}
   end

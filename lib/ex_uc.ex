@@ -25,6 +25,7 @@ defmodule ExUc do
 
   alias ExUc.Value
   alias ExUc.Special
+  alias ExUc.Units
 
   @doc """
   Parses a string into a structured value. When is not possible to get
@@ -56,7 +57,7 @@ defmodule ExUc do
     end
 
     with unit <- unit_str |> String.trim |> String.to_atom,
-      kind_str <- kind_of_unit(unit),
+      kind_str <- Units.get_kind(unit),
       _next when not is_nil(kind_str) <- kind_str,
       kind <- String.to_atom(kind_str),
     do: %Value{value: val, unit: unit, kind: kind}
@@ -94,7 +95,7 @@ defmodule ExUc do
   def to(val, unit_to) when is_binary(val), do: to(from(val), unit_to)
   def to(val, unit_to) when is_map(val) do
     with %{unit: unit_from, value: value_from, kind: _} <- val,
-      {:ok, factor} <- get_conversion(unit_from, unit_to),
+      {:ok, factor} <- Units.get_conversion(unit_from, unit_to),
       new_value <- apply_conversion(value_from, factor),
     do: %Value{value: new_value, unit: unit_to, kind: val.kind}
   end
@@ -120,145 +121,6 @@ defmodule ExUc do
   def as_string({:error, msg}) when is_binary(msg), do: msg
   def as_string(val) do
     "#{val}"
-  end
-
-  @doc """
-  Gets a map with every kind of unit defined in config.
-
-  The result has a very traversable structure as:
-  ```
-  %{
-    kind_of_unit: [
-      alias_0: :main,
-      alias_N: :main,
-    ],
-    ...
-  }
-  ```
-
-  Returns List
-  """
-  def units do
-    Application.get_all_env(:ex_uc)
-    |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)
-    |> Enum.map(fn {kind, units} ->
-      units_map = units
-      |> Enum.flat_map(fn {main, aliases} ->
-        cond do
-          is_list(aliases) -> Keyword.merge([{main, main}], for(alias <- aliases, do: {alias, main}))
-          is_binary(aliases) -> [{main, main},{String.to_atom(aliases), main}]
-          true -> [{main, main},{aliases, main}]
-        end
-      end)
-      {kind, units_map}
-    end)
-    |> Enum.into(%{})
-  end
-
-  @doc """
-  Gets the kind of unit for ther given unit.
-
-  ## Parameters
-
-    - unit: Atom representing the unit to find the kind.
-
-  ## Examples
-  ```
-
-  iex>ExUc.kind_of_unit(:kg)
-  "mass"
-
-  iex>ExUc.kind_of_unit(:meter)
-  "length"
-
-  ```
-  """
-  def kind_of_unit(unit) do
-    kind_kw = units
-    |> Enum.find(fn {_kind, units} -> units |> Keyword.has_key?(unit) end)
-
-    case kind_kw do
-      {kind_name, _units} -> kind_name
-        |> Atom.to_string
-        |> String.replace_suffix("_units", "")
-
-      _ -> nil
-    end
-  end
-
-  @doc """
-  Gets the unit among its aliases that can be used as a key in conversions
-
-  ## Parameters
-
-    - alias: Atom with a unit aliases.
-    - kind: Atom or String for the kind where the alias is.
-
-  ## Examples
-  ```
-
-  iex>ExUc.get_key_unit(:meter, "length")
-  :m
-
-  iex>ExUc.get_key_unit(:pounds, :mass)
-  :lb
-
-  iex>ExUc.get_key_unit(:r4R3, :mass)
-  nil
-
-  ```
-  """
-  def get_key_unit(alias, kind) do
-    kind_token = "#{kind}_units" |> String.to_atom
-    with aliases <- Map.get(units, kind_token),
-      main <- Keyword.get_values(aliases, alias) |> List.first,
-    do: main
-  end
-
-  @doc """
-  Gets the conversion factor for the units
-
-  If can find inverse relation when the conversion is a factor.
-
-  Returns Atom.t, Integer.t, Float.t
-
-  ## Parameters
-
-    - from: Atom representing the unit to convert from
-    - to: Atom representing the unit to convert to
-
-  ## Examples
-  ```
-
-  iex>ExUc.get_conversion(:g, :mg)
-  {:ok, 1000}
-
-  iex>ExUc.get_conversion(:g, :zz)
-  {:error, "undefined conversion"}
-
-  # This relation has not been defined but
-  # the inverse is based on a factor, so is valid.
-  iex>ExUc.get_conversion(:km, :m)
-  {:ok, 1.0e3}
-
-  ```
-  """
-  def get_conversion(from_alias, to_alias) do
-    kind = kind_of_unit(from_alias)
-    conversion_key = "#{kind}_conversions" |> String.to_atom
-
-    {from, to} = {get_key_unit(from_alias, kind), get_key_unit(to_alias, kind)}
-    conversions = Application.get_env(:ex_uc, conversion_key) |> Enum.into(%{})
-    regular_key = "#{from}_to_#{to}" |> String.to_atom
-    inverted_key = "#{to}_to_#{from}" |> String.to_atom
-
-    cond do
-      Map.has_key?(conversions, regular_key) ->
-        {:ok, Map.get(conversions, regular_key)}
-      Map.has_key?(conversions, inverted_key) && is_number(Map.get(conversions, inverted_key)) ->
-        {:ok, 1 / Map.get(conversions, inverted_key)}
-      true -> {:error, "undefined conversion"}
-    end
   end
 
   defp apply_conversion(val, factor) when is_number(factor), do: val * factor

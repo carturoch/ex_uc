@@ -1,14 +1,14 @@
 use Mix.Config
 
 config :ex_uc, :length_units,
-  m: ~w(meter meters)a,
-  km: ~w(kilometer kilometer kms)a,
-  cm: ~w(centimeter centimeters)a,
-  mm: ~w(millimeter millimeters)a,
-  ft: ~w(feet foot)a,
-  in: ~w(inches)a,
-  yd: ~w(yard yards yds)a,
-  mi: ~w(mile miles)a,
+  m: ~w(meter meters),
+  km: ~w(kilometer kilometers kms),
+  cm: ~w(centimeter centimeters),
+  mm: ~w(millimeter millimeters),
+  ft: ~w(feet foot),
+  in: ~w(inches),
+  yd: ~w(yard yards yds),
+  mi: ~w(mile miles),
   ft_in: "feet and inches"
 
 config :ex_uc, :length_conversions,
