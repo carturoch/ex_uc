@@ -1,7 +1,7 @@
 defmodule ExUc.Mixfile do
   use Mix.Project
 
-  @version "0.1.5"
+  @version "0.1.0"
 
   def project do
     [app: :ex_uc,
@@ -43,7 +43,7 @@ defmodule ExUc.Mixfile do
   defp package do
     [
       name: :ex_uc,
-      files: ["lib", "mix.exs", "README.MD", "License.md"],
+      files: ["lib", "mix.exs", "README.md", "License.md"],
       maintainers: ["Carlos Cuellar"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/carturoch/ex_uc"}

@@ -2,25 +2,31 @@ defmodule ExUc do
   @moduledoc """
   # Elixir Unit Converter
 
-  Converts values with units within the same kind.
+  Converts values between units.
 
-  It could be used as:
+  ## Usage
+
+  The quickest way is the function `convert`:
   ```elixir
-  value = ExUc.from("5' 2\\"")
-    |> ExUc.to(:m)
-    |> ExUc.as_string
+  iex>ExUc.convert("5 pounds", "oz")
+  "80.00 oz"
   ```
-  Or:
+  This is just a shortcut for the 3-steps pipeline:
   ```elixir
   import ExUc
 
-  from("25C") |> to(:F) |> as_string # "77 F"
+  new_val = from("5 pounds")  # %ExUc.Value{unit: :lb, value: 5, kind: :mass}
+  |> to(:oz)                  # %ExUc.Value{unit: :oz, value: 80, kind: :mass}
+  |> as_string                # "80.00 oz"
   ```
 
-  Or simply:
-  ```elixir
-  "\#{ExUc.to("72F", :K)}" # "295.37 K"
-  ```
+  ### Errors
+
+  Only two errors are returned when found, both as self descriptive **strings**:
+
+    - `"undefined origin"`: Unit for the original value can't be parsed or found in the configuration.
+    - `"undetermined conversion"`: Conversion between the given units can't be determined.
+
   """
 
   alias ExUc.Value
