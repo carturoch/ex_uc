@@ -5,8 +5,11 @@ defmodule ExUc.Units do
   Allow efficient access to units and conversions defined in config.
   """
 
-  # ETS table to store map of aliases by unit
-  @table :ex_uc_units_map
+  # ETS table to store map of aliases by unit.
+  @units_table :ex_uc_units_map
+
+  # ETS table to store a map per kind with the conversions graph.
+  @graphs_table :ex_uc_units_graphs
 
   @doc """
   Gets a map with every kind of unit defined in config.
@@ -26,10 +29,10 @@ defmodule ExUc.Units do
   """
   def map do
     stored_map = cond do
-      :ets.info(@table) == :undefined ->
-        :ets.new(@table, [:named_table])
-        :"$end_of_table"
-      true -> :ets.first(@table)
+      :ets.info(@units_table) == :undefined ->
+        :ets.new(@units_table, [:named_table]) # Init units map table
+        :"$end_of_table" # Empty table
+      true -> :ets.first(@units_table)
     end
     get_map(stored_map)
   end
@@ -50,10 +53,81 @@ defmodule ExUc.Units do
     end)
     |> Enum.into(%{})
 
-    :ets.insert(@table, {parsed_map})
+    :ets.insert(@units_table, {parsed_map})
     parsed_map
   end
   defp get_map(parsed_map), do: parsed_map
+
+  # Creates a ETS table to store a graph reference per kind
+  def init_graphs do
+    :ets.new(@graphs_table, [:named_table])
+
+    graphs_map = Application.get_all_env(:ex_uc)
+    |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_conversions") end)
+    |> Enum.map(fn {kind_conversion, conversions} ->
+      kind = kind_conversion |> Atom.to_string |> String.replace_suffix("_conversions", "") |> String.to_atom
+      {^kind, g, _} = make_graph(kind, conversions)
+      {kind, g}
+    end)
+    |> Enum.into(%{})
+
+    :ets.insert(@graphs_table, {graphs_map})
+    graphs_map
+  end
+
+  # Creates a graph representing all conversions in a kind
+  # Returns a tuple as {<KIND atom>, <GRAPH tuple>, <NO_VERTICES integer>}
+  defp make_graph(kind, conversions) do
+    g = :digraph.new()
+    conversions
+    |> Enum.map(fn {edge, val} ->
+      {v0, v1} = edge
+      |> Atom.to_string
+      |> String.split("_to_")
+      |> Enum.map(&String.to_atom/1)
+      |> List.to_tuple
+
+      :digraph.add_vertex(g, v0)
+      :digraph.add_vertex(g, v1)
+      :digraph.add_edge(g, v0, v1)
+      
+      # Only when the conversion is a factor the reverse edge is added.
+      if is_number(val), do: :digraph.add_edge(g, v1, v0)
+    end)
+    {kind, g, :digraph.no_vertices(g)}
+  end
+
+  @doc """
+  Gets a list of units as path for conversion.
+
+  Returns List of units.
+
+  ## Parameters
+
+    - kind: Atom as the kind of unit.
+    - from: Atom as initial unit.
+    - to: Atom as target unit.
+
+  ## Examples
+  ```
+
+  iex>ExUc.Units.get_path_in(:length, :km, :ft)
+  [:km, :m, :ft]
+
+  iex>ExUc.Units.get_path_in(:length, :km, :zzx)
+  false
+
+  ```
+  """
+  def get_path_in(kind, from, to) do
+    stored = cond do
+      :ets.info(@graphs_table) == :undefined ->
+        init_graphs()
+      true -> :ets.first(@graphs_table)
+    end
+    g = stored |> Map.get(kind)
+    :digraph.get_short_path(g, from, to)
+  end
 
   @doc """
   Gets the kind of unit for ther given unit.
