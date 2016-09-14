@@ -44,8 +44,8 @@ defmodule ExUc.Units do
       units_map = units
       |> Enum.flat_map(fn {main, aliases} ->
         cond do
-          is_list(aliases) -> [{main, main} | for(alias <- aliases, do: {String.to_atom(alias), main})]
-          is_binary(aliases) -> [{main, main}, {String.to_atom(aliases), main}]
+          is_list(aliases) -> [{main, main} | for(alias <- aliases, do: {alias, main})]
+          is_binary(aliases) -> [{main, main}, {aliases, main}]
           true -> [{main, main}, {aliases, main}]
         end
       end)
@@ -149,7 +149,12 @@ defmodule ExUc.Units do
   """
   def get_kind(unit) do
     kind_kw = map()
-    |> Enum.find(fn {_kind, units} -> units |> Keyword.has_key?(unit) end)
+    |> Enum.find(fn {_kind, units} ->
+      units
+      |> Enum.any?(fn {alias, _main} ->
+        "#{alias}" == "#{unit}"
+      end)
+    end)
 
     case kind_kw do
       {kind_name, _units} -> kind_name
@@ -185,7 +190,7 @@ defmodule ExUc.Units do
   def get_key_alias(alias, kind) do
     kind_token = "#{kind}_units" |> String.to_atom
     with aliases <- Map.get(map(), kind_token),
-      main <- Keyword.get_values(aliases, alias) |> List.first,
+      {_alias, main} <- Enum.find(aliases, fn {a, _key} -> "#{a}" == "#{alias}" end),
     do: main
   end
 

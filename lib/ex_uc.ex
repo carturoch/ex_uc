@@ -96,7 +96,7 @@ defmodule ExUc do
   ```
   """
   def to(val, _unit_to) when is_nil(val), do: {:error, "undefined origin"}
-  def to(val, unit_to) when is_binary(unit_to), do: to(val, String.to_atom(unit_to))
+  # def to(val, unit_to) when is_binary(unit_to), do: to(val, String.to_atom(unit_to))
   def to(val, unit_to) when is_binary(val), do: to(from(val), unit_to)
   def to(val, unit_to) when is_map(val) do
     with %{unit: unit_from, value: value_from, kind: _} <- val,
