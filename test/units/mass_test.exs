@@ -24,7 +24,7 @@ defmodule Units.MassTest do
 
   test "Convert grams to ounces" do
     conversion = from("100g") |> to(:oz) |> as_string
-    assert conversion == "3.50 oz"
+    assert conversion == "3.53 oz"
 
     conversion = from("2 oz") |> to(:g) |> as_string
     assert conversion == "56.70 g"
@@ -35,16 +35,16 @@ defmodule Units.MassTest do
     assert conversion == "35.27 oz"
 
     conversion = from("100oz") |> to(:kg) |> as_string
-    assert conversion == "2.80 kg"
+    assert conversion == "2.83 kg"
   end
 
   test "Convert kilograms to pounds and ounces" do
     conversion = from("1.56 kg") |> to(:lb_oz) |> as_string
-    assert conversion == "3 lb 6.91 oz"
+    assert conversion == "3 lb 7.03 oz"
   end
 
   test "Convert pounds and ounces to kilograms" do
     conversion = from("3 lb 6.91 oz") |> to(:kg) |> as_string
-    assert conversion == "1.54 kg"
+    assert conversion == "1.56 kg"
   end
 end

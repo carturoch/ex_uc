@@ -30,9 +30,7 @@ defmodule ExUc do
 
   """
 
-  alias ExUc.Value
-  alias ExUc.Special
-  alias ExUc.Units
+  alias ExUc.{Value, Special, Units}
 
   @doc """
   Parses a string into a structured value. When is not possible to get

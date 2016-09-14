@@ -8,7 +8,7 @@ defmodule ExUc.Special do
   """
 
   alias ExUc.Units
-  
+
   @precision Application.get_env(:ex_uc, :precision)
 
   @doc """
@@ -24,7 +24,7 @@ defmodule ExUc.Special do
   ```
 
   iex>ExUc.Special.kg_to_lb_oz(20.15)
-  "44 lb 5.28 oz"
+  "44 lb 6.76 oz"
 
   ```
   """
