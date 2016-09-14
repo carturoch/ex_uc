@@ -155,4 +155,11 @@ defmodule ExUc do
   defp apply_conversion(val, factor) when is_number(factor), do: val * factor
   defp apply_conversion(val, formule) when is_function(formule), do: formule.(val)
   defp apply_conversion(val, method) when is_atom(method), do: apply(Special, method, [val])
+  defp apply_conversion(val, path) when is_list(path) do
+    [from|steps] = path
+    value = %Value{unit: from, value: val}
+    Enum.reduce(steps, value, fn(unit, acc) ->
+      to(acc, unit)
+    end).value
+  end
 end

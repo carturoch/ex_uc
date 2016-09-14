@@ -90,7 +90,7 @@ defmodule ExUc.Units do
       :digraph.add_vertex(g, v0)
       :digraph.add_vertex(g, v1)
       :digraph.add_edge(g, v0, v1)
-      
+
       # Only when the conversion is a factor the reverse edge is added.
       if is_number(val), do: :digraph.add_edge(g, v1, v0)
     end)
@@ -215,10 +215,15 @@ defmodule ExUc.Units do
   iex>ExUc.Units.get_conversion(:km, :m)
   {:ok, 1.0e3}
 
+  # This relation has not been defined but
+  # the inverse is based on a factor, so is valid.
+  iex>ExUc.Units.get_conversion(:km, :ft)
+  {:ok, [:km, :m, :ft]}
+
   ```
   """
   def get_conversion(from_alias, to_alias) do
-    kind = get_kind(from_alias)
+    kind = get_kind(from_alias) |> String.to_atom
     conversion_key = "#{kind}_conversions" |> String.to_atom
 
     {from, to} = {get_key_alias(from_alias, kind), get_key_alias(to_alias, kind)}
@@ -226,12 +231,17 @@ defmodule ExUc.Units do
     regular_key = "#{from}_to_#{to}" |> String.to_atom
     inverted_key = "#{to}_to_#{from}" |> String.to_atom
 
-    cond do
+    conversion = cond do
       Map.has_key?(conversions, regular_key) ->
         {:ok, Map.get(conversions, regular_key)}
       Map.has_key?(conversions, inverted_key) && is_number(Map.get(conversions, inverted_key)) ->
         {:ok, 1 / Map.get(conversions, inverted_key)}
-      true -> {:error, "undetermined conversion"}
+      true -> {:ok, get_path_in(kind, from, to)}
+    end
+
+    cond do
+      conversion == {:ok, false} -> {:error, "undetermined conversion"}
+      true -> conversion
     end
   end
 end
