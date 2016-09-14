@@ -10,7 +10,7 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
 
     ```elixir
     def deps do
-      [{:ex_uc, "~> 0.2"}]
+      [{:ex_uc, "~> 0.3"}]
     end
     ```
 
@@ -79,6 +79,10 @@ Which have two sections:
   - **Conversions**
     - Key as `<KIND_conversions>` using the same **kind** from the **alias** section.
     - Each conversion as a pair `key:conversion`, where **key** is an atom with the pattern `<UNIT_FROM>_to_<UNIT_TO>`, and **conversion** could be a _number_, or a _closure_, or an _atom_. Numeric conversions describe multiplication factors, and can be also used as `<B>_to_<A>: 1 / conversion` for a `<A>_to_<B>: factor` without explicit definition. When a factor is not enough, a _closure_ can be used as a simple formula. For special cases use an _atom_ to describe a function in module `Special`.
+
+### More Units
+
+PR with new units or more accurate conversions are welcome.
 
 ## Documentation
 
