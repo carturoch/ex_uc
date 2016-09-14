@@ -1,11 +1,11 @@
 defmodule ExUc.Mixfile do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.2.0"
 
   def project do
     [app: :ex_uc,
-     version: "#{@version}-dev",
+     version: "#{@version}",
      description: "Elixir Unit Converter",
      source_url: "https://github.com/carturoch/ex_uc",
      package: package(),

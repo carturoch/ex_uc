@@ -10,7 +10,7 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
 
     ```elixir
     def deps do
-      [{:ex_uc, "~> 0.1.0"}]
+      [{:ex_uc, "~> 0.2"}]
     end
     ```
 
@@ -21,6 +21,10 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
       [applications: [:ex_uc]]
     end
     ```
+
+### Requirements
+
+This package requires _Elixir **1.3+**_
 
 ## Usage
 
