@@ -42,6 +42,14 @@ new_val = from("5 pounds")  # %ExUc.Value{unit: :lb, value: 5, kind: :mass}
 |> as_string                # "80.00 oz"
 ```
 
+The same unit can be identified by several aliases:
+```elixir
+convert("5 km", "miles") # "3.11 miles"
+convert("5 kms", "mi") # "3.11 mi"
+convert("5 kilometers", "mile") # "3.11 mile"
+convert("5km", "mile") # "3.11 mile"
+```
+
 ### Errors
 
 Only two errors are returned when found, both as self descriptive **strings**:
@@ -53,6 +61,16 @@ Only two errors are returned when found, both as self descriptive **strings**:
 ## Configuration
 
 The only configurable variable is `precision`, by default `2`. It determines how many decimals will have the result when is converted into **string**.
+
+### Units
+
+Included are some of the most frequent units grouped by kinds:
+
+  - Length: (`m`, `km`, `cm`, `mm`, `ft`, `in`, `yd`, `mi`, `ft_in`).
+  - Mass: (`g`, `kg`, `mg`, `lb`, `oz`, `lb_oz`).
+  - Time: (`μs`, `ms`, `s`, `min`, `h`, `d`).
+  - Temperature: (`C`, `F`, `K`).
+  - Speed: (`km/h`, `mph`, `m/s`, `kn`).
 
 ### Adding more units
 
