@@ -56,6 +56,8 @@ The only configurable variable is `precision`, by default `2`. It determines how
 
 ### Adding more units
 
+Unit sets (_kinds_) are really easy to extend. You don't need to add a conversion to every other existent unit in the _kind_ (though, of course you can). **ExUc** will find the shortest path in a _kind_ of units as a graph, using defined conversions.
+
 Every unit supported by **ExUc** is defined in a config file in _config/units/<KIND>.ex_, e.g. `config/units/temperature.ex`.
 
 Each of these files requires to have the following structure:
@@ -82,7 +84,7 @@ Which have two sections:
 
 ### More Units
 
-PR with new units or more accurate conversions are welcome.
+**PRs** or **Issues** with new units or more accurate conversions are welcome.
 
 ## Documentation
 
