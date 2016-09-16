@@ -8,9 +8,7 @@ defmodule ExUc do
 
   The quickest way is the function `convert`:
   ```elixir
-
   ExUc.convert("5 pounds", "oz") # "80.00 oz"
-
   ```
   This is just a shortcut for the 3-steps pipeline:
   ```elixir

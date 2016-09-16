@@ -6,7 +6,7 @@ defmodule ExUc.Mixfile do
   def project do
     [app: :ex_uc,
      version: "#{@version}",
-     description: "Elixir Unit Converter",
+     description: description(),
      source_url: "https://github.com/carturoch/ex_uc",
      package: package(),
      elixir: "~> 1.3",
@@ -48,5 +48,12 @@ defmodule ExUc.Mixfile do
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/carturoch/ex_uc"}
     ]
+  end
+
+  def description do
+    """
+    Utility to convert values between different units of the same kind.
+    Extremely easy to extend and to use.
+    """
   end
 end
