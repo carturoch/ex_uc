@@ -34,15 +34,22 @@ defmodule ExUc.Units do
   Returns Keyword/List
   """
   def all do
-    default = "lib/units/*.ex"
+    defaults = "lib/units/*.ex"
     |> Path.wildcard
     |> Enum.map(&get_module_at/1)
-    |> Enum.map(&get_module_definitions/1)
-    |> IO.inspect
+    |> Enum.flat_map(&get_module_definitions/1)
+
+    overrides = Application.get_all_env(:ex_uc)
+    |> Enum.filter(fn {kind, _opts} ->
+      kind_str = kind |> Atom.to_string
+      String.ends_with?(kind_str, "_units") || String.ends_with?(kind_str, "_conversions")
+    end)
+
+    Keyword.merge(defaults, overrides)
   end
 
   defp get_module_at(path) do
-    module_name = path
+    path
     |> String.trim_leading("lib/units/")
     |> String.trim_trailing(".ex")
   end
@@ -69,7 +76,10 @@ defmodule ExUc.Units do
   """
   def all_conversions(kind) do
     conversion_key = "#{kind}_conversions" |> String.to_atom
-    Application.get_env(:ex_uc, conversion_key) |> Enum.into(%{})
+    all
+    |> Keyword.get_values(conversion_key)
+    |> List.first
+    |> Enum.into(%{})
   end
 
   @doc """
