@@ -1,7 +1,7 @@
 defmodule ExUc.Mixfile do
   use Mix.Project
 
-  @version "0.3.1"
+  @version "1.0.0"
 
   def project do
     [app: :ex_uc,
