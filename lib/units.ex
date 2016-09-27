@@ -34,7 +34,9 @@ defmodule ExUc.Units do
   Returns Keyword/List
   """
   def all do
-    defaults = "lib/units/*.ex"
+    units_modules = Path.absname("units/*.ex", __DIR__)
+
+    defaults = units_modules
     |> Path.wildcard
     |> Enum.map(&get_module_at/1)
     |> Enum.flat_map(&get_module_definitions/1)
@@ -50,7 +52,8 @@ defmodule ExUc.Units do
 
   defp get_module_at(path) do
     path
-    |> String.trim_leading("lib/units/")
+    |> String.split("/")
+    |> List.last
     |> String.trim_trailing(".ex")
   end
 
