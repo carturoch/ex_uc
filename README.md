@@ -10,7 +10,7 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
 
     ```elixir
     def deps do
-      [{:ex_uc, "~> 0.3"}]
+      [{:ex_uc, "~> 1.0"}]
     end
     ```
 
@@ -60,7 +60,11 @@ Only two errors are returned when found, both as self descriptive **strings**:
 
 ## Configuration
 
-The only configurable variable is `precision`, by default `2`. It determines how many decimals will have the result when is converted into **string**.
+The only configurable variable is `precision`, by default `2`. It determines how many decimals will have the result when is converted into **string**. Just define it on your config files as:
+
+```
+config :ex_uc, precision: 2
+```
 
 ### Units
 
@@ -72,13 +76,12 @@ Included are some of the most frequent units grouped by kinds:
   - Temperature: (`C`, `F`, `K`).
   - Speed: (`km/h`, `mph`, `m/s`, `kn`).
 
-### Adding more units
+### Adding More Units
 
-Unit sets (_kinds_) are really easy to extend. You don't need to add a conversion to every other existent unit in the _kind_ (though, of course you can). **ExUc** will find the shortest path in a _kind_ of units as a graph, using defined conversions.
+Kinds are really easy to extend. You don't need to add a conversion to every other existent unit in the _kind_ (though, of course you can). **ExUc** will find the shortest path in a _kind_ of units as a graph, using defined conversions.
 
-Every unit supported by **ExUc** is defined in a config file in _config/units/<KIND>.ex_, e.g. `config/units/temperature.ex`.
+New unit types (_kinds_) can be defined using configuration options for `:ex_uc` application. Each unit must have definitions for _units_ and _conversions_ fallowing this structure:
 
-Each of these files requires to have the following structure:
 ```elixir
 use Mix.Config
 
@@ -100,7 +103,7 @@ Which have two sections:
     - Key as `<KIND_conversions>` using the same **kind** from the **alias** section.
     - Each conversion as a pair `key:conversion`, where **key** is an atom with the pattern `<UNIT_FROM>_to_<UNIT_TO>`, and **conversion** could be a _number_, or a _closure_, or an _atom_. Numeric conversions describe multiplication factors, and can be also used as `<B>_to_<A>: 1 / conversion` for a `<A>_to_<B>: factor` without explicit definition. When a factor is not enough, a _closure_ can be used as a simple formula. For special cases use an _atom_ to describe a function in module `Special`.
 
-### More Units
+### Better Unit Conversions
 
 **PRs** or **Issues** with new units or more accurate conversions are welcome.
 
