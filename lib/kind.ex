@@ -1,10 +1,10 @@
 defmodule ExUc.Kind do
-  use Behaviour
-
   @moduledoc """
   Behaviour for a set of units of the same type with conversion
-  among them.
+  among them. Every kind can be extended or overriden in configuration files.
   """
+
+  use Behaviour
 
   @doc """
   Gets a keyword where every item is conformed by the unit identifier
@@ -24,6 +24,9 @@ defmodule ExUc.Kind do
   When a factor is not enough, a _closure_ can be used as a simple formula.
 
   For special cases use an _atom_ to describe a function in module `Special`.
+
+  **Tip:** Althought the more direct conversions defined, the better performance is achieved, but
+  every relation is not required,  just the ones conecting every unit as a graph.
   """
   defcallback conversions() :: Keyword.t
 end
