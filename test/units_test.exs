@@ -9,6 +9,7 @@ defmodule UnitsTest do
     assert get_key_alias(:pounds, :mass) == :lb
   end
 
+  @tag :current
   test "all/0 includes module defined units and conversions" do
     assert Keyword.has_key? all, :temperature_units
     assert Keyword.has_key? all, :temperature_conversions

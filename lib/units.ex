@@ -29,12 +29,32 @@ defmodule ExUc.Units do
   @doc """
   Gets all defined units as a Keyword.
 
-   Units can be defined in config files or modules under Units namespace.
+  Units can be defined in config files or modules under Units namespace.
 
-   Returns Keyword/List
+  Returns Keyword/List
   """
   def all do
-    Application.get_all_env(:ex_uc)
+    default = "lib/units/*.ex"
+    |> Path.wildcard
+    |> Enum.map(&get_module_at/1)
+    |> Enum.map(&get_module_definitions/1)
+    |> IO.inspect
+  end
+
+  defp get_module_at(path) do
+    module_name = path
+    |> String.trim_leading("lib/units/")
+    |> String.trim_trailing(".ex")
+  end
+
+  defp get_module_definitions(module_name) do
+    units_key = "#{module_name}_units" |> String.to_atom
+    conversions_key = "#{module_name}_conversions" |> String.to_atom
+    mod = Module.safe_concat(["ExUc", "Units", String.capitalize(module_name)])
+    [
+      {units_key, mod.units},
+      {conversions_key, mod.conversions},
+    ]
   end
 
   @doc """
