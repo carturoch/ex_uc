@@ -9,7 +9,7 @@ defmodule ExUc.Special do
 
   alias ExUc.Units
 
-  @precision Application.get_env(:ex_uc, :precision)
+  @precision Units.precision
 
   @doc """
   Converts from kilograms to pounds and ounces

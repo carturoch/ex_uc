@@ -12,6 +12,47 @@ defmodule ExUc.Units do
   @graphs_table :ex_uc_units_graphs
 
   @doc """
+  Gets the defined precision for outputs.
+
+  By default is 2 decimals.
+
+  ## Examples
+  ```
+
+  iex>ExUc.Units.precision
+  2
+
+  ```
+  """
+  def precision, do: Application.get_env(:ex_uc, :precision, 2)
+
+  @doc """
+  Gets all defined units as a Keyword.
+
+   Units can be defined in config files or modules under Units namespace.
+
+   Returns Keyword/List
+  """
+  def all do
+    Application.get_all_env(:ex_uc)
+  end
+
+  @doc """
+  Gets all the conversions for the given kind.
+
+  Retuns Map
+
+  ## Parameters
+
+    - kind: Atom for the kind of units.
+
+  """
+  def all_conversions(kind) do
+    conversion_key = "#{kind}_conversions" |> String.to_atom
+    Application.get_env(:ex_uc, conversion_key) |> Enum.into(%{})
+  end
+
+  @doc """
   Gets a map with every kind of unit defined in config.
 
   The result has a very traversable structure as:
@@ -38,7 +79,7 @@ defmodule ExUc.Units do
   end
 
   defp get_map(:"$end_of_table") do
-    parsed_map = Application.get_all_env(:ex_uc)
+    parsed_map = all()
     |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)
     |> Enum.map(fn {kind, units} ->
       units_map = units
@@ -62,7 +103,7 @@ defmodule ExUc.Units do
   def init_graphs do
     :ets.new(@graphs_table, [:named_table])
 
-    graphs_map = Application.get_all_env(:ex_uc)
+    graphs_map = all()
     |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_conversions") end)
     |> Enum.map(fn {kind_conversion, conversions} ->
       kind = kind_conversion |> Atom.to_string |> String.replace_suffix("_conversions", "") |> String.to_atom
@@ -229,10 +270,9 @@ defmodule ExUc.Units do
   """
   def get_conversion(from_alias, to_alias) do
     kind = get_kind(from_alias) |> String.to_atom
-    conversion_key = "#{kind}_conversions" |> String.to_atom
+    conversions = all_conversions(kind)
 
     {from, to} = {get_key_alias(from_alias, kind), get_key_alias(to_alias, kind)}
-    conversions = Application.get_env(:ex_uc, conversion_key) |> Enum.into(%{})
     regular_key = "#{from}_to_#{to}" |> String.to_atom
     inverted_key = "#{to}_to_#{from}" |> String.to_atom
 

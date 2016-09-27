@@ -14,7 +14,7 @@ defimpl String.Chars, for: ExUc.Value do
 
   defp format_value(int) when is_integer(int), do: "#{int}.00"
   defp format_value(float) when is_float(float) do
-    precision = Application.get_env(:ex_uc, :precision)
+    precision = ExUc.Units.precision()
     float
     |> Float.round(precision)
     |> Float.to_string(decimals: precision)
