@@ -75,7 +75,8 @@ Included are some of the most frequent units grouped by kinds:
   - Time: (`μs`, `ms`, `s`, `min`, `h`, `d`).
   - Temperature: (`C`, `F`, `K`).
   - Speed: (`km/h`, `mph`, `m/s`, `kn`).
-
+  - Pressure: (`Pa`,  `hPa`,  `kPa`,  `bar`,  `at`,  `atm`,  `mmHg`,  `psi`)
+  
 ### Adding More Units
 
 Kinds are really easy to extend. You don't need to add a conversion to every other existent unit in the _kind_ (though, of course you can). **ExUc** will find the shortest path in a _kind_ of units as a graph, using defined conversions.
