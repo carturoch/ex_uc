@@ -1,6 +1,16 @@
 defmodule ExUc.Units.Speed do
   @moduledoc """
   Defines units and conversions for the Speed kind.
+
+  The speed of an object is the magnitude of its velocity (the rate of change of its position).
+
+  ## Included Units and Aliases
+
+    - **mps**, m/s, meters per second
+    - **kmph**, km/h, kilometers per hour
+    - **miph**, mi/h, mph, miles per hour
+    - **kn**, knot, knots, kt
+
   """
   @behaviour ExUc.Kind
 

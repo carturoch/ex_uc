@@ -1,6 +1,20 @@
 defmodule ExUc.Units.Time do
   @moduledoc """
   Defines units and conversions for the Time kind.
+
+  Time is the indefinite continued progress of existence and events
+  that occur in apparently irreversible succession from the past
+  through the present to the future.
+
+  ## Included Units and Aliases
+
+    - **Ms**, μs, microsecond, microseconds
+    - **ms**, millisecond, milliseconds
+    - **s**, sec, secs, second, seconds
+    - **min**, mins, minute, minutes
+    - **h**, hrs, hour, hours
+    - **d**, day, days
+
   """
   @behaviour ExUc.Kind
 

@@ -1,6 +1,15 @@
 defmodule ExUc.Units.Temperature do
   @moduledoc """
   Defines units and conversions for the Temperature kind.
+
+  A temperature is an objective comparative measure of hot or cold.
+
+  ## Included Units and Aliases
+
+    - **C**, Celsius
+    - **F**, Fahrenheit
+    - **K**, Kelvin
+
   """
   @behaviour ExUc.Kind
 

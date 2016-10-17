@@ -1,6 +1,21 @@
 defmodule ExUc.Units.Length do
   @moduledoc """
   Defines units and conversions for the Length kind.
+
+  In the [International System of Quantities](https://en.wikipedia.org/wiki/International_System_of_Quantities), length is any quantity with dimension distance.
+
+  ## Included Units and Aliases
+
+    - **m**, meter, meters
+    - **km**, kilometer, kilometers, kms
+    - **cm**, centimeter, centimeters
+    - **mm**, millimeter, millimeters
+    - **ft**, feet, foot
+    - **in**, inches
+    - **yd**, yard, yards, yds
+    - **mi**, mile, miles
+    - **ft_in**, feet and inches
+
   """
   @behaviour ExUc.Kind
 

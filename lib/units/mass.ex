@@ -1,6 +1,19 @@
 defmodule ExUc.Units.Mass do
   @moduledoc """
   Defines units and conversions for the Mass kind.
+
+  In physics, mass is a property of a physical body.
+  It is the measure of an object's resistance to acceleration (a change in its state of motion) when a force is applied.
+
+  ## Included Units and Aliases
+
+    - **g**, grams, gram
+    - **kg**, kilograms, kilogram
+    - **mg**, milligrams
+    - **lb**, pounds, pound, lbs
+    - **oz**, ounces, ounce, oz
+    - **lb_oz**, pounds and ounces
+
   """
   @behaviour ExUc.Kind
 

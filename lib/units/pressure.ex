@@ -1,6 +1,19 @@
 defmodule ExUc.Units.Pressure do
   @moduledoc """
   Defines units and conversions for the Pressure kind.
+
+  Pressure is the amount of force acting per unit area.
+
+  ## Included Units and Aliases
+    - **Pa**, Pascal
+    - **hPa**, Hectopascal
+    - **kPa**, Kilopascal, kilopascal, kilopascals
+    - **bar**, Bar, bar, bars
+    - **at**, Technical atmosphere
+    - **atm**, Standard atmosphere
+    - **mmHg**, Torr torr Torrs torrs,
+    - **psi**, Pounds per square inch
+
   """
   @behaviour ExUc.Kind
 
