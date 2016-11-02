@@ -25,6 +25,22 @@ defmodule ExUc.Units do
   ```
   """
   def precision, do: Application.get_env(:ex_uc, :precision, 2)
+  
+
+  @doc """
+  Gets the defined flag for when to trim decimal zeros.
+
+  By default is disabled.
+
+  ## Examples
+  ```
+
+  iex>ExUc.Units.allow_exact_results
+  false
+
+  ```
+  """
+  def allow_exact_results, do: Application.get_env(:ex_uc, :allow_exact_results, false)
 
   @doc """
   Gets all defined units as a Keyword.

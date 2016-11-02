@@ -62,10 +62,15 @@ Only two errors are returned when found, both as self descriptive **strings**:
 
 ## Configuration
 
-The only configurable variable is `precision`, by default `2`. It determines how many decimals will have the result when is converted into **string**. Just define it on your config files as:
+The only two configurable variables are:
 
-```
+  - `precision` How many decimals will have the result when is converted into **string**
+  - `allow_exact_results` When `true`, truncates decimal zeros in exact results.
+
+Could be set as:
+```elixir
 config :ex_uc, precision: 2
+config :ex_uc, allow_exact_results: false
 ```
 
 ### Units
@@ -84,7 +89,9 @@ Included are some of the most frequent units grouped by kinds:
 
 Kinds are really easy to extend. You don't need to add a conversion to every other existent unit in the _kind_ (though, of course you can). **ExUc** will find the shortest path in a _kind_ of units as a graph, using defined conversions.
 
-New unit types (_kinds_) can be defined using configuration options for `:ex_uc` application. Each unit must have definitions for _units_ and _conversions_ fallowing this structure:
+Unit types (_kinds_) should be defined using configuration options for `:ex_uc` application. Each unit must have definitions for _units_ and _conversions_ (See some included examples at _config/units_ in this repository). 
+
+New or overridden definitions should follow this structure:
 
 ```elixir
 use Mix.Config
