@@ -65,7 +65,7 @@ defmodule ExUc.Units do
   @doc """
   Gets all the conversions for the given kind.
 
-  Retuns Map
+  Returns Map
 
   ## Parameters
 
@@ -99,7 +99,7 @@ defmodule ExUc.Units do
   def map do
     stored_map = cond do
       :ets.info(@units_table) == :undefined ->
-        :ets.new(@units_table, [:named_table]) # Init units map table
+        :ets.new(@units_table, [:named_table]) # Initialize units map table
         :"$end_of_table" # Empty table
       true -> :ets.first(@units_table)
     end
@@ -199,7 +199,7 @@ defmodule ExUc.Units do
   end
 
   @doc """
-  Gets the kind of unit for ther given unit.
+  Gets the kind of unit for their given unit.
 
   ## Parameters
 

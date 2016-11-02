@@ -110,7 +110,7 @@ defmodule ExUc do
   ## Parameters
 
     - from_str: String with the value to convert.
-    - to: String or Atom with the unito to convert to.
+    - to: String or Atom with the unit to convert to.
 
   ## Examples
   ```
@@ -129,7 +129,7 @@ defmodule ExUc do
 
   ## Parameters
 
-    - val: ExUc.Value to stringify.
+    - val: ExUc.Value to convert to string.
 
   ## Examples
   ```

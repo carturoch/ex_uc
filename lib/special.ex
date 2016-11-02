@@ -2,7 +2,7 @@ defmodule ExUc.Special do
   @moduledoc """
   # Special conversions.
 
-  For conversions where simple formules are not enough the config file will
+  For conversions where simple formulas are not enough the config file will
   reference using an atom a method of this module.
 
   """
