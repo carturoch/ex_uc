@@ -12,7 +12,7 @@ defmodule ExUc.Units.Speed do
     - **kn**, knot, knots, kt
 
   """
-  @behaviour ExUc.Kind
+  use ExUc.Kind
 
   def units do
     [

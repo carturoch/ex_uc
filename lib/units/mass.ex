@@ -15,7 +15,7 @@ defmodule ExUc.Units.Mass do
     - **lb_oz**, pounds and ounces
 
   """
-  @behaviour ExUc.Kind
+  use ExUc.Kind
 
   def units do
     [

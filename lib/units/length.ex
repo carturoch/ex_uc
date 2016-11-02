@@ -17,7 +17,7 @@ defmodule ExUc.Units.Length do
     - **ft_in**, feet and inches
 
   """
-  @behaviour ExUc.Kind
+  use ExUc.Kind
 
   def units do
     [

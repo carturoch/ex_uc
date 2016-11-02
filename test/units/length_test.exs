@@ -3,6 +3,12 @@ defmodule Units.LengthTest do
 
   import ExUc
 
+  test "Gets defitions from behaviour" do
+    alias ExUc.Units.Length
+    definition_keys = Length.definitions |> Keyword.keys 
+    assert definition_keys == [:length_units, :length_conversions]
+  end
+
   test "Conversions within metric system" do
     conversion = from("2000 cm")
       |> to(:m)

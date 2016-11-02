@@ -29,4 +29,32 @@ defmodule ExUc.Kind do
   every relation is not required,  just the ones conecting every unit as a graph.
   """
   defcallback conversions() :: Keyword.t
+
+  @doc """
+  Common methods for Kind
+  """
+  defmacro __using__(_) do
+    quote location: :keep do
+      @behaviour ExUc.Kind
+
+      @doc """
+      Gets all definitions in the module
+      """
+      def definitions do
+        kind = __MODULE__ 
+        |> Atom.to_string
+        |> String.split(".")
+        |> List.last
+        |> String.downcase
+
+        units_key = "#{kind}_units" |> String.to_atom
+        conversions_key = "#{kind}_conversions" |> String.to_atom
+
+        [
+          {units_key, units()},
+          {conversions_key, conversions()}
+        ]
+      end
+    end
+  end
 end

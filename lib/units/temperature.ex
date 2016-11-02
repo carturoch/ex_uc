@@ -11,7 +11,7 @@ defmodule ExUc.Units.Temperature do
     - **K**, Kelvin
 
   """
-  @behaviour ExUc.Kind
+  use ExUc.Kind
 
   def units do
     [

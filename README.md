@@ -78,6 +78,7 @@ Included are some of the most frequent units grouped by kinds:
   - Temperature: (`C`, `F`, `K`).
   - Speed: (`km/h`, `mph`, `m/s`, `kn`).
   - Pressure: (`Pa`,  `hPa`,  `kPa`,  `bar`,  `at`,  `atm`,  `mmHg`,  `psi`).
+  - Memory: (`B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `b`, `Kb`, `Mb`, `Gb`, `Tb`, `Pb`, `Eb`, `Zb`, `Yb`, `KiB`, `MiB`, `GiB`, `TiB`, `PiB`, `EiB`, `ZiB`, `YiB`).
 
 ### Adding More Units
 

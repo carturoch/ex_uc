@@ -58,13 +58,8 @@ defmodule ExUc.Units do
   end
 
   defp get_module_definitions(module_name) do
-    units_key = "#{module_name}_units" |> String.to_atom
-    conversions_key = "#{module_name}_conversions" |> String.to_atom
     mod = Module.safe_concat(["ExUc", "Units", String.capitalize(module_name)])
-    [
-      {units_key, mod.units},
-      {conversions_key, mod.conversions},
-    ]
+    mod.definitions
   end
 
   @doc """
@@ -294,8 +289,8 @@ defmodule ExUc.Units do
   iex>ExUc.Units.get_conversion(:km, :m)
   {:ok, 1.0e3}
 
-  # This relation has not been defined but
-  # the inverse is based on a factor, so is valid.
+  # This relation has not been defined either but
+  # there is a traversable path among units.
   iex>ExUc.Units.get_conversion(:km, :ft)
   {:ok, [:km, :m, :ft]}
 

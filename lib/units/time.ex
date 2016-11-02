@@ -16,7 +16,7 @@ defmodule ExUc.Units.Time do
     - **d**, day, days
 
   """
-  @behaviour ExUc.Kind
+  use ExUc.Kind
 
   def units do
     [

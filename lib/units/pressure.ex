@@ -15,7 +15,7 @@ defmodule ExUc.Units.Pressure do
     - **psi**, Pounds per square inch
 
   """
-  @behaviour ExUc.Kind
+  use ExUc.Kind
 
   def units do
     [
