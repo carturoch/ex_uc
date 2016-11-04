@@ -16,14 +16,6 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
     end
     ```
 
-  2. Ensure `ex_uc` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:ex_uc]]
-    end
-    ```
-
 ### Requirements
 
 This package requires _Elixir **1.3+**_
