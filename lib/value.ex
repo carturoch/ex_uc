@@ -18,7 +18,7 @@ defimpl String.Chars, for: ExUc.Value do
     precision = ExUc.Units.precision()
     float
     |> Float.round(precision)
-    |> Float.to_string(decimals: precision)
+    |> :erlang.float_to_binary(decimals: precision)
     |> maybe_exact
   end
 

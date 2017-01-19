@@ -10,8 +10,8 @@ defmodule UnitsTest do
   end
 
   test "all/0 includes module defined units and conversions" do
-    assert Keyword.has_key? all, :temperature_units
-    assert Keyword.has_key? all, :temperature_conversions
+    assert Keyword.has_key? all(), :temperature_units
+    assert Keyword.has_key? all(), :temperature_conversions
   end
 
   test "conversions/1 get all the conversions for the given kind" do

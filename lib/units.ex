@@ -90,7 +90,7 @@ defmodule ExUc.Units do
   """
   def all_conversions(kind) do
     conversion_key = "#{kind}_conversions" |> String.to_atom
-    all
+    all()
     |> Keyword.get_values(conversion_key)
     |> List.first
     |> Enum.into(%{})

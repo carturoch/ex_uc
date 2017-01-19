@@ -4,13 +4,13 @@ defmodule ExUc.Kind do
   among them. Every kind can be extended or overriden in configuration files.
   """
 
-  use Behaviour
+  # use Behaviour
 
   @doc """
   Gets a keyword where every item is conformed by the unit identifier
   and a list of aliases
   """
-  defcallback units() :: Keyword.t
+  @callback units() :: Keyword.t
 
   @doc """
   Gets a map  where each conversion is a composed by the pair `key:conversion`,
@@ -28,7 +28,7 @@ defmodule ExUc.Kind do
   **Tip:** Althought the more direct conversions defined, the better performance is achieved, but
   every relation is not required,  just the ones conecting every unit as a graph.
   """
-  defcallback conversions() :: Keyword.t
+  @callback conversions() :: Keyword.t
 
   @doc """
   Common methods for Kind
