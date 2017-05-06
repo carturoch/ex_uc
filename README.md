@@ -10,11 +10,11 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
 
   1. Add `ex_uc` to your list of dependencies in `mix.exs`:
 
-    ```elixir
-    def deps do
-      [{:ex_uc, "~> 1.0"}]
-    end
-    ```
+```elixir
+def deps do
+  [{:ex_uc, "~> 1.0"}]
+end
+```
 
 ### Requirements
 
@@ -81,7 +81,7 @@ Included are some of the most frequent units grouped by kinds:
 
 Kinds are really easy to extend. You don't need to add a conversion to every other existent unit in the _kind_ (though, of course you can). **ExUc** will find the shortest path in a _kind_ of units as a graph, using defined conversions.
 
-Unit types (_kinds_) should be defined using configuration options for `:ex_uc` application. Each unit must have definitions for _units_ and _conversions_ (See some included examples at _config/units_ in this repository). 
+Unit types (_kinds_) should be defined using configuration options for `:ex_uc` application. Each unit must have definitions for _units_ and _conversions_ (See some included examples at _config/units_ in this repository).
 
 New or overridden definitions should follow this structure:
 
