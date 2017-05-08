@@ -24,7 +24,7 @@ defmodule ExUc.Special do
   ```
 
   iex>ExUc.Special.kg_to_lb_oz(20.15)
-  "44 lb 6.76 oz"
+  "44 lb 6.77 oz"
 
   ```
   """

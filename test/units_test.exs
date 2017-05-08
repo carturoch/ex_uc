@@ -17,4 +17,11 @@ defmodule UnitsTest do
   test "conversions/1 get all the conversions for the given kind" do
      assert Map.has_key? all_conversions(:temperature), :C_to_F
   end
+
+  @tag :current
+  test "configuration defined conversions override modules one" do
+    conversions = all_conversions(:mass)
+    assert conversions[:kg_to_lb] == 2.20462
+    assert Enum.count(conversions) > 1
+  end
 end

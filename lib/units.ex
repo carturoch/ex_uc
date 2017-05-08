@@ -25,7 +25,6 @@ defmodule ExUc.Units do
   ```
   """
   def precision, do: Application.get_env(:ex_uc, :precision, 2)
-  
 
   @doc """
   Gets the defined flag for when to trim decimal zeros.
@@ -63,7 +62,16 @@ defmodule ExUc.Units do
       String.ends_with?(kind_str, "_units") || String.ends_with?(kind_str, "_conversions")
     end)
 
-    Keyword.merge(defaults, overrides)
+    all_units = Enum.scan(overrides, defaults, fn({key, value}, acc) ->
+      with default_value <- Keyword.get(defaults, key),
+        overridden_value when not is_nil(default_value) <- Keyword.merge(default_value, value)
+      do
+        Keyword.put(defaults, key, overridden_value)
+      else
+        _ -> acc
+      end
+    end)
+    |> List.first
   end
 
   defp get_module_at(path) do
