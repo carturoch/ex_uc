@@ -65,7 +65,7 @@ config :ex_uc, precision: 2
 config :ex_uc, allow_exact_results: false
 ```
 
-### Units
+## Included Units
 
 Included are some of the most frequent units grouped by kinds:
 
@@ -77,13 +77,61 @@ Included are some of the most frequent units grouped by kinds:
   - Pressure: (`Pa`,  `hPa`,  `kPa`,  `bar`,  `at`,  `atm`,  `mmHg`,  `psi`).
   - Memory: (`B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `b`, `Kb`, `Mb`, `Gb`, `Tb`, `Pb`, `Eb`, `Zb`, `Yb`, `KiB`, `MiB`, `GiB`, `TiB`, `PiB`, `EiB`, `ZiB`, `YiB`).
 
-### Adding More Units
+## Extending ExUc
 
-Kinds are really easy to extend. You don't need to add a conversion to every other existent unit in the _kind_ (though, of course you can). **ExUc** will find the shortest path in a _kind_ of units as a graph, using defined conversions.
+### Overriding Conversions
 
-Unit types (_kinds_) should be defined using configuration options for `:ex_uc` application. Each unit must have definitions for _units_ and _conversions_ (See some included examples at _config/units_ in this repository).
+Default conversions may be overridden just by providing a new value to in a configuration file:
 
-New or overridden definitions should follow this structure:
+```elixir
+config :ex_uc, :mass_conversions, # The kind suffixed with _conversions
+  kg_to_lb: 2.20462 # More precise factor required
+  # More units within this kind could go here
+```
+
+There are three types of conversion:
+
+- **Factor**: A numeric value, like in the previous example, that is gonna be used to multiply the origin value. _Most conversions can use this type_.
+
+- **Factor**: A function where one or more operation will performed to the origin value.
+_Example_:
+```elixir
+config :ex_uc, :_temperature_conversions,
+  C_to_F: &(&1 * 1.8 + 32),
+```
+
+- **Special**: An atom referencing a function in a module. This function takes the origin value and returns a string. _Right now this is only used for composed units and can not be overridden_.
+
+### Updating Alias for Existent Units
+
+An alias is just another term that can be used to reference an existent unit and therefore all its conversions.
+
+```elixir
+config :ex_uc, :length_units, # The kind suffixed with _units
+  m: ["meter", "meters", "mètre", "mètres")
+```
+
+The main unit (`m`, in the sample) should be used as the key for the list of aliases, and such list must include every desired alias.
+
+Every _main unit_ and default aliases for included units, are in the [docs](https://hexdocs.pm/ex_uc) in the *Included Units and Aliases* sections.
+
+### Adding New Units to Existent **Kinds**
+
+New units can be added in configuration files by providing aliases for the new unit and a conversion to or from an existent unit of the same **kind**:
+
+```elixir
+config :ex_uc, :length_units,
+  dm: ~w(decimeter decimeter), # Main unit and aliases
+
+config :ex_uc, :length_conversions,
+  m_to_dm: 10, # A conversion from an existent unit
+```
+
+### Adding New **Kinds**
+
+New unit types (_kinds_) should be defined using configuration options for `:ex_uc` application. Each unit must have definitions for _units_ and _conversions_ (See some included examples at `config/units` in this repository).
+
+A new kind should have this structure:
 
 ```elixir
 use Mix.Config
@@ -97,18 +145,9 @@ config :ex_uc, :<KIND>_conversions,
   <UNIT_X>_to_<UNIT_Y>: :special    # Atom referencing a special method.  
 ```
 
-Which have two sections:
-
-  - **Aliases**
-    - Key as `<KIND>_units` where kind identifies the type of measurement, e.g: _length_, _temperature_, _pressure_, etc.
-    - Each unit to support in the `kind` as a pair `unit:aliases` where **unit** is the most used unit and **aliases** is a list of strings (or a single one), one for each supported representation of the unit.
-  - **Conversions**
-    - Key as `<KIND_conversions>` using the same **kind** from the **alias** section.
-    - Each conversion as a pair `key:conversion`, where **key** is an atom with the pattern `<UNIT_FROM>_to_<UNIT_TO>`, and **conversion** could be a _number_, or a _closure_, or an _atom_. Numeric conversions describe multiplication factors, and can be also used as `<B>_to_<A>: 1 / conversion` for a `<A>_to_<B>: factor` without explicit definition. When a factor is not enough, a _closure_ can be used as a simple formula. For special cases use an _atom_ to describe a function in module `Special`.
-
 ### Better Unit Conversions
 
-**PRs** or **Issues** with new units or more accurate conversions are welcome.
+**PRs** or **Issues** with bugs, new units or more accurate default conversions are welcome.
 
 ## Documentation
 
