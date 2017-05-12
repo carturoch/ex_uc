@@ -64,10 +64,12 @@ defmodule ExUc.Units do
 
     Enum.reduce(overrides, defaults, fn({key, value}, acc) ->
       with default_value <- Keyword.get(acc, key),
-        overridden_value when not is_nil(default_value) <- Keyword.merge(default_value, value)
+        _is_override when not is_nil(default_value) <- default_value,
+        overridden_value <- Keyword.merge(default_value, value)
       do
         Keyword.put(acc, key, overridden_value)
       else
+        nil -> Keyword.put(acc, key, value) # New values
         _ -> acc
       end
     end)

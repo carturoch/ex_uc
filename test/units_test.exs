@@ -29,11 +29,17 @@ defmodule UnitsTest do
     assert gram_key == :g
   end
 
-  @tag :current
   test "units defined in config are loaded among defaults" do
     assert get_key_alias(:stone, :mass) == :st
 
     conversions = all_conversions(:mass)
     assert conversions[:st_to_lb] == 14
+  end
+
+  test "config defined units are available" do
+    assert get_key_alias(:xufi, :sample) == :xf
+
+    conversions = all_conversions(:sample)
+    assert conversions[:xf_to_zb] == 25
   end
 end
