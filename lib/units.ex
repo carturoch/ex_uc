@@ -62,16 +62,15 @@ defmodule ExUc.Units do
       String.ends_with?(kind_str, "_units") || String.ends_with?(kind_str, "_conversions")
     end)
 
-    Enum.scan(overrides, defaults, fn({key, value}, acc) ->
-      with default_value <- Keyword.get(defaults, key),
+    Enum.reduce(overrides, defaults, fn({key, value}, acc) ->
+      with default_value <- Keyword.get(acc, key),
         overridden_value when not is_nil(default_value) <- Keyword.merge(default_value, value)
       do
-        Keyword.put(defaults, key, overridden_value)
+        Keyword.put(acc, key, overridden_value)
       else
         _ -> acc
       end
     end)
-    |> List.last
   end
 
   defp get_module_at(path) do

@@ -24,9 +24,16 @@ defmodule UnitsTest do
     assert Enum.count(conversions) > 1
   end
 
-  @tag :current
   test "configuration defined aliases override modules ones" do
     gram_key = get_key_alias(:gramos, :mass)
     assert gram_key == :g
+  end
+
+  @tag :current
+  test "units defined in config are loaded among defaults" do
+    assert get_key_alias(:stone, :mass) == :st
+
+    conversions = all_conversions(:mass)
+    assert conversions[:st_to_lb] == 14
   end
 end
