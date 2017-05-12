@@ -71,7 +71,7 @@ defmodule ExUc.Units do
         _ -> acc
       end
     end)
-    |> List.first
+    |> List.last
   end
 
   defp get_module_at(path) do
