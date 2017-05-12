@@ -93,7 +93,7 @@ There are three types of conversion:
 
 - **Factor**: A numeric value, like in the previous example, that is gonna be used to multiply the origin value. _Most conversions can use this type_.
 
-- **Factor**: A function where one or more operation will performed to the origin value.
+- **Formula**: A function where one or more operation will performed to the origin value.
 _Example_:
 ```elixir
 config :ex_uc, :_temperature_conversions,
