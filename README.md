@@ -108,7 +108,7 @@ An alias is just another term that can be used to reference an existent unit and
 
 ```elixir
 config :ex_uc, :length_units, # The kind suffixed with _units
-  m: ["meter", "meters", "mètre", "mètres")
+  m: ["meter", "meters", "mètre", "mètres"]
 ```
 
 The main unit (`m`, in the sample) should be used as the key for the list of aliases, and such list must include every desired alias.
@@ -121,7 +121,7 @@ New units can be added in configuration files by providing aliases for the new u
 
 ```elixir
 config :ex_uc, :length_units,
-  dm: ~w(decimeter decimeter), # Main unit and aliases
+  dm: ~w(decimeter decimeters), # Main unit and aliases
 
 config :ex_uc, :length_conversions,
   m_to_dm: 10, # A conversion from an existent unit
