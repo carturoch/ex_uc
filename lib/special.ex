@@ -167,7 +167,7 @@ defmodule ExUc.Special do
   ```
   """
   def ft_in_to_ft(str) do
-    [feet_str, _lb, inches_str, _oz] = String.split(str, " ")
+    [feet_str, _ft, inches_str, _in] = String.split(str, " ")
     {feet, _} = Float.parse(feet_str)
     {inches, _} = Float.parse(inches_str)
     {:ok, in_to_ft} = Units.get_conversion(:in, :ft)

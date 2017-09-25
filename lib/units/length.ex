@@ -43,7 +43,8 @@ defmodule ExUc.Units.Length do
       ft_to_in: 12,
       mi_to_m: 1609.34,
       mi_to_yd: 1760,
-      m_to_ft_in: :m_to_ft_in
+      m_to_ft_in: :m_to_ft_in,
+      ft_in_to_ft: :ft_in_to_ft
     ]
   end
 end
