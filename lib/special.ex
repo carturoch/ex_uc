@@ -120,7 +120,7 @@ defmodule ExUc.Special do
   ```
   """
   def is_feet_and_inches?(str) do
-    String.match?(str, ~r/(\d+(\.\d+)?)\s*ft.(\d+(\.\d+)?)\s*in/)
+    String.match?(str, ~r/(\d+(\.\d+)?)\s*('|ft).(\d+(\.\d+)?)\s*(in|")/)
   end
 
   @doc """
@@ -167,7 +167,11 @@ defmodule ExUc.Special do
   ```
   """
   def ft_in_to_ft(str) do
-    [feet_str, _ft, inches_str, _in] = String.split(str, " ")
+    parts = String.split(str, " ")
+    [feet_str, inches_str] = case Enum.count(parts) do
+      2 -> parts
+      4 -> parts |> Enum.take_every(2)
+    end
     {feet, _} = Float.parse(feet_str)
     {inches, _} = Float.parse(inches_str)
     {:ok, in_to_ft} = Units.get_conversion(:in, :ft)

@@ -36,4 +36,12 @@ defmodule Units.LengthTest do
     conversion = from("50 meters") |> to(:km) |> as_string
     assert conversion == "0.05 km"
   end
+
+  test "recognizes the quote notation for feet" do
+    assert convert("5'", :m) == "1.52 m"
+  end
+
+  test "recognizes the quote notation for inches" do
+    assert convert("19\"", :cm) == "48.26 cm"
+  end
 end

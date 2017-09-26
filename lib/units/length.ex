@@ -25,8 +25,8 @@ defmodule ExUc.Units.Length do
       km: ~w(kilometer kilometers kms),
       cm: ~w(centimeter centimeters),
       mm: ~w(millimeter millimeters),
-      ft: ~w(feet foot),
-      in: ~w(inches),
+      ft: ~w(feet foot '),
+      in: ~w(inches "),
       yd: ~w(yard yards yds),
       mi: ~w(mile miles),
       ft_in: "feet and inches"
