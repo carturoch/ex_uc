@@ -19,7 +19,7 @@ defmodule Units.KindTest do
 
   def conversions_are_correct(module) do
     module.units
-    |> Enum.filter(fn {k, _} -> k not in [:ft_in, :lb_oz] end)
+    |> Enum.filter(fn {k, _} -> not k in [:ft_in, :lb_oz] end)
     |> Enum.reduce(fn({k, _}, {k0, _}) -> 
       assert is_map to("1#{k}", k0)
       {k, [k0]} 
