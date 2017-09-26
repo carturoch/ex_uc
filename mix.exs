@@ -1,7 +1,7 @@
 defmodule ExUc.Mixfile do
   use Mix.Project
 
-  @version "1.1.0"
+  @version "1.0.5"
 
   def project do
     [app: :ex_uc,
@@ -9,7 +9,7 @@ defmodule ExUc.Mixfile do
      description: description(),
      source_url: "https://github.com/carturoch/ex_uc",
      package: package(),
-     elixir: "~> 1.4",
+     elixir: "~> 1.3",
      docs: [
        main: "ExUc", source_ref: "v#{@version}",
        source_url: "https://github.com/carturoch/ex_uc",
