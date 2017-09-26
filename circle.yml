@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/ex_uc
     docker:
-      - image: trenpixster/elixir:1.3.2
+      - image: trenpixster/elixir:1.4.4
     steps:
       - checkout
       - run: mix deps.get
