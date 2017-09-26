@@ -18,7 +18,7 @@ end
 
 ### Requirements
 
-This package requires _Elixir **1.4+**_
+This package requires _Elixir **1.3+**_
 
 ## Usage
 
