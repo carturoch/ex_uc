@@ -5,12 +5,12 @@ defmodule Units.KindTest do
 
   @modules [
     ExUc.Units.Length,
-    # ExUc.Units.Mass,
-    # ExUc.Units.Memory,
-    # ExUc.Units.Pressure,
-    # ExUc.Units.Speed,
-    # ExUc.Units.Temperature,
-    # ExUc.Units.Time
+    ExUc.Units.Mass,
+    ExUc.Units.Memory,
+    ExUc.Units.Pressure,
+    ExUc.Units.Speed,
+    ExUc.Units.Temperature,
+    ExUc.Units.Time
   ]
   
   test "all unit conversions return no error" do
