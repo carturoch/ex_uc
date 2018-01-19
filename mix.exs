@@ -4,20 +4,23 @@ defmodule ExUc.Mixfile do
   @version "1.0.5"
 
   def project do
-    [app: :ex_uc,
-     version: "#{@version}",
-     description: description(),
-     source_url: "https://github.com/carturoch/ex_uc",
-     package: package(),
-     elixir: "~> 1.3",
-     docs: [
-       main: "ExUc", source_ref: "v#{@version}",
-       source_url: "https://github.com/carturoch/ex_uc",
-       readme: true
-     ],
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+    [
+      app: :ex_uc,
+      version: "#{@version}",
+      description: description(),
+      source_url: "https://github.com/carturoch/ex_uc",
+      package: package(),
+      elixir: "~> 1.3",
+      docs: [
+        main: "ExUc",
+        source_ref: "v#{@version}",
+        source_url: "https://github.com/carturoch/ex_uc",
+        readme: true
+      ],
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application

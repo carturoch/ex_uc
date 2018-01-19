@@ -51,26 +51,31 @@ defmodule ExUc.Units do
   def all do
     units_modules = Path.absname("units/*.ex", __DIR__)
 
-    defaults = units_modules
-    |> Path.wildcard
-    |> Enum.map(&get_module_at/1)
-    |> Enum.flat_map(&get_module_definitions/1)
+    defaults =
+      units_modules
+      |> Path.wildcard()
+      |> Enum.map(&get_module_at/1)
+      |> Enum.flat_map(&get_module_definitions/1)
 
-    overrides = Application.get_all_env(:ex_uc)
-    |> Enum.filter(fn {kind, _opts} ->
-      kind_str = kind |> Atom.to_string
-      String.ends_with?(kind_str, "_units") || String.ends_with?(kind_str, "_conversions")
-    end)
+    overrides =
+      Application.get_all_env(:ex_uc)
+      |> Enum.filter(fn {kind, _opts} ->
+        kind_str = kind |> Atom.to_string()
+        String.ends_with?(kind_str, "_units") || String.ends_with?(kind_str, "_conversions")
+      end)
 
-    Enum.reduce(overrides, defaults, fn({key, value}, acc) ->
+    Enum.reduce(overrides, defaults, fn {key, value}, acc ->
       with default_value <- Keyword.get(acc, key),
-        _is_override when not is_nil(default_value) <- default_value,
-        overridden_value <- Keyword.merge(default_value, value)
-      do
+           _is_override when not is_nil(default_value) <- default_value,
+           overridden_value <- Keyword.merge(default_value, value) do
         Keyword.put(acc, key, overridden_value)
       else
-        nil -> Keyword.put(acc, key, value) # New values
-        _ -> acc
+        # New values
+        nil ->
+          Keyword.put(acc, key, value)
+
+        _ ->
+          acc
       end
     end)
   end
@@ -78,7 +83,7 @@ defmodule ExUc.Units do
   defp get_module_at(path) do
     path
     |> String.split("/")
-    |> List.last
+    |> List.last()
     |> String.trim_trailing(".ex")
   end
 
@@ -98,10 +103,11 @@ defmodule ExUc.Units do
 
   """
   def all_conversions(kind) do
-    conversion_key = "#{kind}_conversions" |> String.to_atom
+    conversion_key = "#{kind}_conversions" |> String.to_atom()
+
     all()
     |> Keyword.get_values(conversion_key)
-    |> List.first
+    |> List.first()
     |> Enum.into(%{})
   end
 
@@ -122,48 +128,64 @@ defmodule ExUc.Units do
   Returns Map
   """
   def map do
-    stored_map = cond do
-      :ets.info(@units_table) == :undefined ->
-        :ets.new(@units_table, [:named_table]) # Initialize units map table
-        :"$end_of_table" # Empty table
-      true -> :ets.first(@units_table)
-    end
+    stored_map =
+      cond do
+        :ets.info(@units_table) == :undefined ->
+          # Initialize units map table
+          :ets.new(@units_table, [:named_table])
+          # Empty table
+          :"$end_of_table"
+
+        true ->
+          :ets.first(@units_table)
+      end
+
     get_map(stored_map)
   end
 
   defp get_map(:"$end_of_table") do
-    parsed_map = all()
-    |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)
-    |> Enum.map(fn {kind, units} ->
-      units_map = units
-      |> Enum.flat_map(fn {main, aliases} ->
-        cond do
-          is_list(aliases) -> [{main, main} | for(alias <- aliases, do: {alias, main})]
-          is_binary(aliases) -> [{main, main}, {aliases, main}]
-          true -> [{main, main}, {aliases, main}]
-        end
+    parsed_map =
+      all()
+      |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_units") end)
+      |> Enum.map(fn {kind, units} ->
+        units_map =
+          units
+          |> Enum.flat_map(fn {main, aliases} ->
+            cond do
+              is_list(aliases) -> [{main, main} | for(alias <- aliases, do: {alias, main})]
+              is_binary(aliases) -> [{main, main}, {aliases, main}]
+              true -> [{main, main}, {aliases, main}]
+            end
+          end)
+
+        {kind, units_map}
       end)
-      {kind, units_map}
-    end)
-    |> Enum.into(%{})
+      |> Enum.into(%{})
 
     :ets.insert(@units_table, {parsed_map})
     parsed_map
   end
+
   defp get_map(parsed_map), do: parsed_map
 
   # Creates a ETS table to store a graph reference per kind
   def init_graphs do
     :ets.new(@graphs_table, [:named_table])
 
-    graphs_map = all()
-    |> Enum.filter(fn {kind, _opts} -> Atom.to_string(kind) |> String.ends_with?("_conversions") end)
-    |> Enum.map(fn {kind_conversion, conversions} ->
-      kind = kind_conversion |> Atom.to_string |> String.replace_suffix("_conversions", "") |> String.to_atom
-      {^kind, g, _} = make_graph(kind, conversions)
-      {kind, g}
-    end)
-    |> Enum.into(%{})
+    graphs_map =
+      all()
+      |> Enum.filter(fn {kind, _opts} ->
+        Atom.to_string(kind) |> String.ends_with?("_conversions")
+      end)
+      |> Enum.map(fn {kind_conversion, conversions} ->
+        kind =
+          kind_conversion |> Atom.to_string() |> String.replace_suffix("_conversions", "")
+          |> String.to_atom()
+
+        {^kind, g, _} = make_graph(kind, conversions)
+        {kind, g}
+      end)
+      |> Enum.into(%{})
 
     :ets.insert(@graphs_table, {graphs_map})
     graphs_map
@@ -173,13 +195,15 @@ defmodule ExUc.Units do
   # Returns a tuple as {<KIND atom>, <GRAPH tuple>, <NO_VERTICES integer>}
   defp make_graph(kind, conversions) do
     g = :digraph.new()
+
     conversions
     |> Enum.map(fn {edge, val} ->
-      {v0, v1} = edge
-      |> Atom.to_string
-      |> String.split("_to_")
-      |> Enum.map(&String.to_atom/1)
-      |> List.to_tuple
+      {v0, v1} =
+        edge
+        |> Atom.to_string()
+        |> String.split("_to_")
+        |> Enum.map(&String.to_atom/1)
+        |> List.to_tuple()
 
       :digraph.add_vertex(g, v0)
       :digraph.add_vertex(g, v1)
@@ -188,6 +212,7 @@ defmodule ExUc.Units do
       # Only when the conversion is a factor the reverse edge is added.
       if is_number(val), do: :digraph.add_edge(g, v1, v0)
     end)
+
     {kind, g, :digraph.no_vertices(g)}
   end
 
@@ -214,11 +239,15 @@ defmodule ExUc.Units do
   ```
   """
   def get_path_in(kind, from, to) do
-    stored = cond do
-      :ets.info(@graphs_table) == :undefined ->
-        init_graphs()
-      true -> :ets.first(@graphs_table)
-    end
+    stored =
+      cond do
+        :ets.info(@graphs_table) == :undefined ->
+          init_graphs()
+
+        true ->
+          :ets.first(@graphs_table)
+      end
+
     g = stored |> Map.get(kind)
     :digraph.get_short_path(g, from, to)
   end
@@ -242,20 +271,23 @@ defmodule ExUc.Units do
   ```
   """
   def get_kind(unit) do
-    kind_kw = map()
-    |> Enum.find(fn {_kind, units} ->
-      units
-      |> Enum.any?(fn {alias, _main} ->
-        "#{alias}" == "#{unit}"
+    kind_kw =
+      map()
+      |> Enum.find(fn {_kind, units} ->
+        units
+        |> Enum.any?(fn {alias, _main} ->
+          "#{alias}" == "#{unit}"
+        end)
       end)
-    end)
 
     case kind_kw do
-      {kind_name, _units} -> kind_name
-        |> Atom.to_string
+      {kind_name, _units} ->
+        kind_name
+        |> Atom.to_string()
         |> String.replace_suffix("_units", "")
 
-      _ -> nil
+      _ ->
+        nil
     end
   end
 
@@ -282,10 +314,11 @@ defmodule ExUc.Units do
   ```
   """
   def get_key_alias(alias, kind) do
-    kind_token = "#{kind}_units" |> String.to_atom
+    kind_token = "#{kind}_units" |> String.to_atom()
+
     with aliases <- Map.get(map(), kind_token),
-      {_alias, main} <- Enum.find(aliases, fn {a, _key} -> "#{a}" == "#{alias}" end),
-    do: main
+         {_alias, main} <- Enum.find(aliases, fn {a, _key} -> "#{a}" == "#{alias}" end),
+         do: main
   end
 
   @doc """
@@ -322,20 +355,24 @@ defmodule ExUc.Units do
   ```
   """
   def get_conversion(from_alias, to_alias) do
-    kind = get_kind(from_alias) |> String.to_atom
+    kind = get_kind(from_alias) |> String.to_atom()
     conversions = all_conversions(kind)
 
     {from, to} = {get_key_alias(from_alias, kind), get_key_alias(to_alias, kind)}
-    regular_key = "#{from}_to_#{to}" |> String.to_atom
-    inverted_key = "#{to}_to_#{from}" |> String.to_atom
+    regular_key = "#{from}_to_#{to}" |> String.to_atom()
+    inverted_key = "#{to}_to_#{from}" |> String.to_atom()
 
-    conversion = cond do
-      Map.has_key?(conversions, regular_key) ->
-        {:ok, Map.get(conversions, regular_key)}
-      Map.has_key?(conversions, inverted_key) && is_number(Map.get(conversions, inverted_key)) ->
-        {:ok, 1 / Map.get(conversions, inverted_key)}
-      true -> {:ok, get_path_in(kind, from, to)}
-    end
+    conversion =
+      cond do
+        Map.has_key?(conversions, regular_key) ->
+          {:ok, Map.get(conversions, regular_key)}
+
+        Map.has_key?(conversions, inverted_key) && is_number(Map.get(conversions, inverted_key)) ->
+          {:ok, 1 / Map.get(conversions, inverted_key)}
+
+        true ->
+          {:ok, get_path_in(kind, from, to)}
+      end
 
     cond do
       conversion == {:ok, false} -> {:error, "undetermined conversion"}

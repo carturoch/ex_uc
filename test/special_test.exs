@@ -14,6 +14,5 @@ defmodule SpecialTest do
       assert convert(~s(7 ' 6 "), "ft") == "7.50 ft"
       assert convert(~s(7' 6"), "ft") == "7.50 ft"
     end
-
   end
 end

@@ -53,17 +53,18 @@ defmodule ExUc do
   ```
   """
   def from(str) do
-    {val, unit_str} = cond do
-      Special.is_pounds_and_ounces?(str) -> Special.lb_oz_to_lb(str)
-      Special.is_feet_and_inches?(str) -> Special.ft_in_to_ft(str)
-      true -> Float.parse(str)
-    end
+    {val, unit_str} =
+      cond do
+        Special.is_pounds_and_ounces?(str) -> Special.lb_oz_to_lb(str)
+        Special.is_feet_and_inches?(str) -> Special.ft_in_to_ft(str)
+        true -> Float.parse(str)
+      end
 
-    with unit <- unit_str |> String.trim |> String.to_atom,
-      kind_str <- Units.get_kind(unit),
-      _next when not is_nil(kind_str) <- kind_str,
-      kind <- String.to_atom(kind_str),
-    do: %Value{value: val, unit: unit, kind: kind}
+    with unit <- unit_str |> String.trim() |> String.to_atom(),
+         kind_str <- Units.get_kind(unit),
+         _next when not is_nil(kind_str) <- kind_str,
+         kind <- String.to_atom(kind_str),
+         do: %Value{value: val, unit: unit, kind: kind}
   end
 
   @doc """
@@ -95,11 +96,12 @@ defmodule ExUc do
   """
   def to(val, _unit_to) when is_nil(val), do: {:error, "undefined origin"}
   def to(val, unit_to) when is_binary(val), do: to(from(val), unit_to)
+
   def to(val, unit_to) when is_map(val) do
     with %{unit: unit_from, value: value_from, kind: _} <- val,
-      {:ok, factor} <- Units.get_conversion(unit_from, unit_to),
-      new_value <- apply_conversion(value_from, factor),
-    do: %Value{value: new_value, unit: unit_to, kind: val.kind}
+         {:ok, factor} <- Units.get_conversion(unit_from, unit_to),
+         new_value <- apply_conversion(value_from, factor),
+         do: %Value{value: new_value, unit: unit_to, kind: val.kind}
   end
 
   @doc """
@@ -143,6 +145,7 @@ defmodule ExUc do
   ```
   """
   def as_string({:error, msg}) when is_binary(msg), do: msg
+
   def as_string(val) do
     "#{val}"
   end
@@ -150,10 +153,12 @@ defmodule ExUc do
   defp apply_conversion(val, factor) when is_number(factor), do: val * factor
   defp apply_conversion(val, formule) when is_function(formule), do: formule.(val)
   defp apply_conversion(val, method) when is_atom(method), do: apply(Special, method, [val])
+
   defp apply_conversion(val, path) when is_list(path) do
-    [from|steps] = path
+    [from | steps] = path
     value = %Value{unit: from, value: val}
-    Enum.reduce(steps, value, fn(unit, acc) ->
+
+    Enum.reduce(steps, value, fn unit, acc ->
       to(acc, unit)
     end).value
   end

@@ -9,7 +9,7 @@ defmodule ExUc.Special do
 
   alias ExUc.Units
 
-  @precision Units.precision
+  @precision Units.precision()
 
   @doc """
   Converts from kilograms to pounds and ounces
@@ -145,7 +145,7 @@ defmodule ExUc.Special do
     {pounds, _} = Float.parse(pounds_str)
     {ounces, _} = Float.parse(ounces_str)
     {:ok, oz_to_lb} = Units.get_conversion(:oz, :lb)
-    all_pounds = pounds + (ounces * oz_to_lb)
+    all_pounds = pounds + ounces * oz_to_lb
     {all_pounds, "lb"}
   end
 
@@ -168,14 +168,17 @@ defmodule ExUc.Special do
   """
   def ft_in_to_ft(str) do
     parts = String.split(str, " ")
-    [feet_str, inches_str] = case Enum.count(parts) do
-      2 -> parts
-      4 -> parts |> Enum.take_every(2)
-    end
+
+    [feet_str, inches_str] =
+      case Enum.count(parts) do
+        2 -> parts
+        4 -> parts |> Enum.take_every(2)
+      end
+
     {feet, _} = Float.parse(feet_str)
     {inches, _} = Float.parse(inches_str)
     {:ok, in_to_ft} = Units.get_conversion(:in, :ft)
-    all_feet = feet + (inches * in_to_ft)
+    all_feet = feet + inches * in_to_ft
     {all_feet, "ft"}
   end
 end

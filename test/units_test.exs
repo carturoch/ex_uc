@@ -10,12 +10,12 @@ defmodule UnitsTest do
   end
 
   test "all/0 includes module defined units and conversions" do
-    assert Keyword.has_key? all(), :temperature_units
-    assert Keyword.has_key? all(), :temperature_conversions
+    assert Keyword.has_key?(all(), :temperature_units)
+    assert Keyword.has_key?(all(), :temperature_conversions)
   end
 
   test "conversions/1 get all the conversions for the given kind" do
-     assert Map.has_key? all_conversions(:temperature), :C_to_F
+    assert Map.has_key?(all_conversions(:temperature), :C_to_F)
   end
 
   test "configuration defined conversions override modules one" do

@@ -10,7 +10,7 @@ defmodule ExUc.Kind do
   Gets a keyword where every item is conformed by the unit identifier
   and a list of aliases
   """
-  @callback units() :: Keyword.t
+  @callback units() :: Keyword.t()
 
   @doc """
   Gets a map  where each conversion is a composed by the pair `key:conversion`,
@@ -28,7 +28,7 @@ defmodule ExUc.Kind do
   **Tip:** Althought the more direct conversions defined, the better performance is achieved, but
   every relation is not required,  just the ones conecting every unit as a graph.
   """
-  @callback conversions() :: Keyword.t
+  @callback conversions() :: Keyword.t()
 
   @doc """
   Common methods for Kind
@@ -41,14 +41,15 @@ defmodule ExUc.Kind do
       Gets all definitions in the module
       """
       def definitions do
-        kind = __MODULE__ 
-        |> Atom.to_string
-        |> String.split(".")
-        |> List.last
-        |> String.downcase
+        kind =
+          __MODULE__
+          |> Atom.to_string()
+          |> String.split(".")
+          |> List.last()
+          |> String.downcase()
 
-        units_key = "#{kind}_units" |> String.to_atom
-        conversions_key = "#{kind}_conversions" |> String.to_atom
+        units_key = "#{kind}_units" |> String.to_atom()
+        conversions_key = "#{kind}_conversions" |> String.to_atom()
 
         [
           {units_key, units()},
