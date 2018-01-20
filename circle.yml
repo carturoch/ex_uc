@@ -6,4 +6,7 @@ jobs:
       - image: elixir:1.5.2
     steps:
       - checkout
+      - run: mix local.hex --force
+      - run: mix local.rebar
+      - run: mix deps.get
       - run: mix test
