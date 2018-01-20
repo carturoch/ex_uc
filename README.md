@@ -12,13 +12,13 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
 
 ```elixir
 def deps do
-  [{:ex_uc, "~> 1.0"}]
+  [{:ex_uc, "~> 1.1"}]
 end
 ```
 
 ### Requirements
 
-This package requires _Elixir **1.3+**_
+This package requires _Elixir **1.5+**_
 
 ## Usage
 
