@@ -1,6 +1,6 @@
 # ExUc - Elixir Unit Converter
 
-[![Build Status](https://circleci.com/gh/carturoch/ex_uc.svg?style=shield&circle-token=fd3d9870245619fd325e90c5cabfb70109eb139b)](https://circleci.com/gh/carturoch/ex_uc)
+[![Build Status](https://travis-ci.org/carturoch/ex_uc.svg?branch=master)](https://travis-ci.org/carturoch/ex_uc)
 
 Converts values between units.
 
