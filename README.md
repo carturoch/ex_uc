@@ -12,7 +12,7 @@ From [Hex](https://hexdocs.pm/ex_uc), the package can be installed as:
 
 ```elixir
 def deps do
-  [{:ex_uc, "~> 1.1"}]
+  [{:ex_uc, "~> 1.2"}]
 end
 ```
 
