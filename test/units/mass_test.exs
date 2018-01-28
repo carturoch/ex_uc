@@ -4,10 +4,11 @@ defmodule Units.MassTest do
   import ExUc
 
   test "Conversions within metric system" do
-    conversion = from("0.25 kg")
-    |> to(:g)
-    |> to(:mg)
-    |> as_string
+    conversion =
+      from("0.25 kg")
+      |> to(:g)
+      |> to(:mg)
+      |> as_string
 
     assert conversion == "250000.00 mg"
   end

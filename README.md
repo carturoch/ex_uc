@@ -54,15 +54,17 @@ Only two errors are returned when found, both as self descriptive **strings**:
 
 ## Configuration
 
-The only two configurable variables are:
+Configurable variables are:
 
   - `precision` How many decimals will have the result when is converted into **string**
   - `allow_exact_results` When `true`, truncates decimal zeros in exact results.
+  - `units_modules` Names of kinds of units used. Defaults to the included modules.
 
 Could be set as:
 ```elixir
 config :ex_uc, precision: 2
 config :ex_uc, allow_exact_results: false
+config :ex_uc, units_modules: ~w(length mass)
 ```
 
 ## Included Units
@@ -144,6 +146,8 @@ config :ex_uc, :<KIND>_conversions,
   <UNIT_C>_to_<UNIT_D>: &(&1 + 5)   # Conversion formula.
   <UNIT_X>_to_<UNIT_Y>: :special    # Atom referencing a special method.  
 ```
+
+This new kind will be included automatically without the need to specify it in `:units_modules`.
 
 ### Better Unit Conversions
 

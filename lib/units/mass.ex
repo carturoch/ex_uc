@@ -35,7 +35,8 @@ defmodule ExUc.Units.Mass do
       lb_to_g: 453.59,
       kg_to_lb: 2.2046,
       lb_to_oz: 16,
-      kg_to_lb_oz: :kg_to_lb_oz # References a method in module Special.
+      # References a method in module Special.
+      kg_to_lb_oz: :kg_to_lb_oz
     ]
   end
 end

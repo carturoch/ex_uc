@@ -11,6 +11,9 @@ defmodule ExUc.Units do
   # ETS table to store a map per kind with the conversions graph.
   @graphs_table :ex_uc_units_graphs
 
+  # This kinds be used by default 
+  @default_kinds ~w(length mass memory pressure speed temperature time)
+
   @doc """
   Gets the defined precision for outputs.
 
@@ -25,6 +28,12 @@ defmodule ExUc.Units do
   ```
   """
   def precision, do: Application.get_env(:ex_uc, :precision, 2)
+
+  @doc """
+  Gets the enabled unit modules defined in config.
+  If there is none defined, will include only the defaults
+  """
+  def units_modules, do: Application.get_env(:ex_uc, :units_modules, @default_kinds)
 
   @doc """
   Gets the defined flag for when to trim decimal zeros.
@@ -49,12 +58,9 @@ defmodule ExUc.Units do
   Returns Keyword/List
   """
   def all do
-    units_modules = Path.absname("units/*.ex", __DIR__)
-
-    defaults =
-      units_modules
-      |> Path.wildcard()
-      |> Enum.map(&get_module_at/1)
+    defaults = 
+      units_modules() 
+      |> Enum.map(&String.capitalize/1)
       |> Enum.flat_map(&get_module_definitions/1)
 
     overrides =
@@ -73,22 +79,14 @@ defmodule ExUc.Units do
         # New values
         nil ->
           Keyword.put(acc, key, value)
-
         _ ->
           acc
       end
     end)
   end
 
-  defp get_module_at(path) do
-    path
-    |> String.split("/")
-    |> List.last()
-    |> String.trim_trailing(".ex")
-  end
-
   defp get_module_definitions(module_name) do
-    mod = Module.safe_concat(["ExUc", "Units", String.capitalize(module_name)])
+    mod = Module.safe_concat(["ExUc", "Units", module_name])
     mod.definitions
   end
 

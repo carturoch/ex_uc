@@ -69,7 +69,7 @@ defmodule ExUc.Units.Memory do
       PiB: ~w(pebibytes pebibyte Pebibyte Pebibytes),
       EiB: ~w(exbibytes exbibyte Exbibyte Exbibytes),
       ZiB: ~w(zebibytes zebibyte Zebibyte Zebibytes),
-      YiB: ~w(yobibytes yobibyte Yobibyte Yobibytes),
+      YiB: ~w(yobibytes yobibyte Yobibyte Yobibytes)
     ]
   end
 

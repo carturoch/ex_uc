@@ -4,10 +4,11 @@ defmodule Units.TimeTest do
   import ExUc
 
   test "Days to milliseconds" do
-    result = convert("5 d", :h)
-    |> convert(:min)
-    |> convert(:s)
-    |> convert(:ms)
+    result =
+      convert("5 d", :h)
+      |> convert(:min)
+      |> convert(:s)
+      |> convert(:ms)
 
     assert result == "432000000.00 ms"
     assert convert("5 days", :ms) == "432000000.00 ms"
