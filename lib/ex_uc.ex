@@ -50,6 +50,9 @@ defmodule ExUc do
   iex>ExUc.from("5 alien")
   nil
 
+  iex>ExUc.from("two miles")
+  nil
+
   ```
   """
   def from(str) do
@@ -57,7 +60,8 @@ defmodule ExUc do
       cond do
         Special.is_pounds_and_ounces?(str) -> Special.lb_oz_to_lb(str)
         Special.is_feet_and_inches?(str) -> Special.ft_in_to_ft(str)
-        true -> Float.parse(str)
+        String.match?(str, ~r/^\d/) -> Float.parse(str)
+        true -> {nil, ""}
       end
 
     with unit <- unit_str |> String.trim() |> String.to_atom(),
